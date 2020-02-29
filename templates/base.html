@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %} " />
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %} " />
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %} " />
+
+  <!-- LightBox -->
+  <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %} " />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+  <title>EAST AFRICA PROPERTY CONSULTANTS MORTGAGE DB SYSTEM {% block title%} {%endblock%}</title>
+</head>
+
+<body>
+
+  <div class="row">
+    <div class="col-md-2 sidebar-wrapper">
+      {% include 'partials/_sidebar.html'%}
+    </div>
+    <div class="col-md-10">
+      {% include 'partials/_topbar.html'%}
+      {%block content %} {% endblock %}
+    </div>
+  </div>
+
+
+
+
+  <script src="{% static 'js/jquery-3.3.1.min.js' %} "></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+  <script src="{% static  'js/main.js' %} "></script>
+  <script src="{% static  'js/lightbox.min.js' %} "></script>
+</body>
+
+</html>

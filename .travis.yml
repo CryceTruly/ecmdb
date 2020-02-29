@@ -1,0 +1,21 @@
+dist: xenial # required for Python >= 3.7
+language: python
+python:
+  - "3.7"
+
+services:
+  - postgresql
+env:
+  - SECRET_KEY='secretstuff'
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - python manage.py test --verbosity=2
+
+  # run tests with coverage
+  - coverage run --source='contacts/,accounts/,pages/,realtors/' manage.py test && coverage report
+
+after_success:
+  - coveralls

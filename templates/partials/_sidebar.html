@@ -1,0 +1,21 @@
+{% load static%}
+{% block content %}
+
+<div class="sidebar-container" style="color: white;" id="wrapper">
+    <div class="" id="sidebar-wrapper">
+        <i class="fas fa-house-damage fa-2x center"></i>
+        <div class="sidebar-container-items" style="display: flex; flex-direction: column;">
+            <a href="#" class=""><i class="fas  icon fa-clipboard"></i> My Reports</a>
+            <a href="#" class=""><i class="fas icon fa-hand-holding-usd"></i>Expenses</a>
+            <a href="{% url 'login' %}" class=""><i class="fas icon fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    {% endblock %}
+</div>
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
