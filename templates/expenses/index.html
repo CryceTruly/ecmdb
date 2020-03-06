@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %} | Dashboard {% endblock %}
+{% block content %}
+
+<!-- Alerts -->
+
+<section id="dashboard" class="py-4">
+  <div class="container">
+
+
+{% if not expenses.count %}
+
+<h3>No Expense Requests yet </h3>
+<a href="{% url 'expenses_add' %}">Add New</a>
+
+{% else %}
+<div class="row">
+<div class="col-md-10">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Expenses</a></li>
+    <li class="breadcrumb-item active" aria-current="page">My Expense Requests</li>
+  </ol>
+</nav>
+</div>
+
+<div class="col-md-2">
+<button type="button" class="btn btn-outline-success btn-lg" data-toggle="modal" data-target="#exampleModal">Make Request</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Expense Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <form action="{%url 'expenses_add'%}" method="POST" autocomplete="off">
+              {% csrf_token%}
+          <div class="form-group">
+            <label for="amount" class="col-form-label">Amount (RWF):</label>
+            <input type="number" name="amount" class="form-control" id="amount" required>
+          </div>
+          <div class="form-group">
+            <label for="purpose"  class="col-form-label">Purpose:</label>
+            <textarea class="form-control" name="purpose" id="purpose" required></textarea>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="submit" class="btn btn-primary" value="Submit">
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+
+{% include 'partials/_alerts.html'%}
+
+<table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+
+      <th scope="col">Amount (RWF)</th>
+      <th scope="col">Purpose</th>
+      <th scope="col">Status</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for ex in expenses%}
+
+    <tr>
+      <th scope="row">{{ex.id}}</th>
+
+      <td>{{ex.amount}}</td>
+      <td>{{ex.purpose}}</td>
+      <td>{{ex.status}}</td>
+      <td>{{ex.requested_on}}</td>
+       <td><button class="btn btn-sm btn-info">Edit</button> &nbsp; <button class="btn btn-sm btn-warning">Cancel</button></td>
+
+    </tr>
+
+
+{% endfor %}
+
+  </tbody>
+</table>
+
+{% endif %}
+  </div>
+  </div>
+</section>
+{%endblock%}

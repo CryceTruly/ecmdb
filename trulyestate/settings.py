@@ -28,16 +28,16 @@ SECRET_KEY = '9fvl0&mt$9l6lypthk2j(1r7n&#*508dim=4qauy6un-#)k$pv'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'accounts.User'
 
 # Application definition
 
 INSTALLED_APPS = [
     'pages',
     'realtors',
-    'listings',
+    'expenses',
     'accounts',
-    'contacts',
+    'reports',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'trulyestate.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'eacdev',
+        'NAME': 'eacprod',
         'USER': 'postgres',
         'PASSWORD': 'password',
         'HOST': 'localhost'
