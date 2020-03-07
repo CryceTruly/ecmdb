@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %} | My Reports {% endblock %}
+
+{% load static %}
+
+ {% block content %}
+
+<div class="row mt-5 ml-3">
+<div class="col-md-10">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Reports</a></li>
+    <li class="breadcrumb-item active" aria-current="page">My Reports</li>
+  </ol>
+</nav>
+</div>
+
+<div class="col-md-2">
+<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
+</div>
+</div>
+{% endblock content %}

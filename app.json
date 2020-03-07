@@ -1,16 +1,9 @@
 {
-  "addons": [
-
-  ],
-  "buildpacks": [
-
-  ],
-  "env": {
-  },
-  "formation": {
-  },
-  "name": "TrulyEstates",
-  "scripts": {
-  },
+  "addons": [],
+  "buildpacks": [],
+  "env": {},
+  "formation": {},
+  "name": "eacmdbs",
+  "scripts": {},
   "stack": "heroku-18"
 }

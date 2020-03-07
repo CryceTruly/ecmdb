@@ -1,4 +1,4 @@
 
-web: gunicorn trulyestate.wsgi
+web: gunicorn eacmdb.wsgi
 release: python manage.py makemigrations --noinput
 release: python manage.py migrate --noinput

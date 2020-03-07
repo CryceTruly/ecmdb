@@ -1,5 +1,5 @@
 <!-- Top Bar -->
-<section id="top-bar" class="p-3 top-bar">
+<section id="top-bar" class="p-1 top-bar">
   <div class="container">
     <div class="row">
       <div class="col-md-4">
@@ -8,10 +8,14 @@
       </div>
       <div class="col-md-4">
         <div class="social text-right">
-          John Doe,
-          <a href="https://github.com/crycetruly" target="_blank">
-            <i class="fab fa-power"></i> Logout
-          </a>
+          <span class="pr-3">{{ request.user.email }}</span>
+          <a>
+           <form action="{% url 'logout' %}" method="POST" style="display:inline">
+            {% csrf_token %}
+           <i class="fas icon fa-sign-out-alt"></i>
+            <input type="submit" class="logout-link" value='Logout' href="{% url 'login' %}">
+            </form>
+            </a>
         </div>
       </div>
     </div>

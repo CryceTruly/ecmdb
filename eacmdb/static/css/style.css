@@ -22,8 +22,18 @@
   text-decoration: none !important;
   background: none !important;
   color: white !important;
-  border: none !important;
+  border: none;
 }
+
+.logout-link :hover {
+  font-size: 17px !important;
+  padding: 10px !important;
+  text-decoration: none !important;
+  background-color: rgb(21, 32, 43);
+  color: rgb(29, 161, 243) !important;
+  border: none;
+}
+
 .sidebar-container-items a {
   font-size: 17px;
   padding: 10px;
