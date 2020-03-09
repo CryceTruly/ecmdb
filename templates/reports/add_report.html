@@ -19,57 +19,75 @@
 <div class="col-md-2">
 <button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
 </div>
-<form>
-
+<form action="{%url 'add_report'%}" method="POST" autocomplete="off">
+              {% csrf_token%}
+              {% include 'partials/_alerts.html'%}
 <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputEmail4">Name of the Owner</label>
-      <input type="email" class="form-control" id="inputEmail4" name="owner" placeholder="Full Name">
+      <input type="text" class="form-control" id="inputEmail4" name="owner"  value="{{ values.owner }}" placeholder="Full Name">
     </div>
     <div class="form-group col-md-6">
-      <label for="inputPassword4">Contact</label>
-      <input type="password" class="form-control" id="inputPassword4" placeholder="0wner Contact">
+      <label for="owner_contact">Contact</label>
+      <input type="text" class="form-control" id="owner_contact" value="{{ values.owner_contact }}"  name="owner_contact" placeholder="0wner Contact">
     </div>
   </div>
   <div class="form-group">
     <label for="inputAddress">Location</label>
-    <input type="text" class="form-control" id="inputLocation" placeholder="KG 17 Main Street">
+    <input type="text" class="form-control" id="inputAddress" value="{{ values.location }}" name="location" placeholder="KG 17 Main Street">
   </div>
   <div class="form-group">
-    <label for="plotNo">Plot Number</label>
-    <input type="text" class="form-control" id="plotNo" placeholder="17">
+    <label for="plot_no">Plot Number</label>
+    <input type="text" class="form-control" id="plot_no"  value="{{ values.plot_no }}" name="plot_no" placeholder="17">
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inspection_date">Inspection Date</label>
-      <input type="date" class="form-control" id="inspection_date">
+      <input type="date" class="form-control"  value="{{ values.owner_contact }}" id="inspection_date" name="inspection_date">
     </div>
     <div class="form-group col-md-6">
-      <label for="_date">Date of Report Delivery</label>
-      <input type="date" class="form-control" id="_date">
+      <label for="delivery_date">Date of Report Delivery</label>
+      <input type="date" class="form-control" value="{{ values.delivery_date }}"  id="delivery_date" name="delivery_date">
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="amount">Amount (RWF)</label>
-      <input type="number" class="form-control" id="amount">
+      <input type="number" class="form-control" value="{{ values.amount }}"  name="amount" id="amount">
     </div>
     <div class="form-group col-md-6">
       <label for="bank">Bank</label>
-    <select class="form-control" id="bank">
-      <option>Equity</option>
-      <option>Bank Of Kigali</option>
-      <option>KCB</option>
+    <select class="form-control" id="bank" name="bank" value="{{ values.bank }}" >
+      <option name="bank">Equity</option>
+      <option name="bank">Bank Of Kigali</option>
+      <option name="bank">KCB</option>
     </select>
     </div>
   </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
 
+<label for="purpose">Purpose</label>
+
+    <select class="form-control" id="purpose" name="purpose" value="{{ values.purpose }}" >
+      <option name="purpose">Equity</option>
+      <option name="purpose">purpose Of Kigali</option>
+      <option name="purpose">KCB</option>
+    </select>
+
+</div>
+  <div class="form-group col-md-6">
+
+<label for="pdf_file">Choose a report file</label>
   <div class="custom-file">
-  <input type="file" class="custom-file-input" id="customFile">
-  <label class="custom-file-label" for="customFile">Choose Report file</label>
+  <input type="file" name="pdf_file" class="custom-file-input" id="customFile" value="{{ values.pdf_file }}">
+  <label class="custom-file-label" name="pdf_file" for="pdf_file">Choose Report file</label>
+</div>
+  </div>
+
 </div>
 
-  <button type="button" class="btn btn-primary mt-3">Submit</button>
+  <input type="submit" class="btn btn-primary mt-3" value="Submit"></input>
 
 </form>
 
