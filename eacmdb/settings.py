@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'eacmdb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecmbd',
+        'NAME': 'db1',
         'USER': 'postgres',
         'PASSWORD': 'password',
         'HOST': 'localhost'

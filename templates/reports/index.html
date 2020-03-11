@@ -48,10 +48,10 @@
     <td>{{report.contact}}</td>
    <td>{{report.inspection_date}}</td>
      <td>{{report.delivery_date}}</td>
-        <td>{{report.amount_charged}}</td>
+        <td>{{report.amount}}</td>
     <td>{{report.client}}</td>
       <td>{{report.purpose}}</td>
-       <td><button class="btn btn-sm btn-info">Edit</button></td>
+       <td><button class="btn btn-sm btn-info">Edit</button></td>  <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
 
     </tr>
 

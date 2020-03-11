@@ -16,7 +16,7 @@ class Report(models.Model):
                                    max_length=255, on_delete=models.CASCADE)
     owner = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    amount_charged = models.FloatField()
+    amount = models.FloatField(max_length=255)
     client = models.CharField(max_length=255)
     purpose = models.CharField(max_length=100, choices=PURPOSE_CHOICES)
     inspection_date = models.DateField()
@@ -26,7 +26,8 @@ class Report(models.Model):
     report_payed_for = models.BooleanField(default=False)
     reason_for_not_paying = models.TextField()
     delivery_date = models.DateField()
-    updated_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.purpose

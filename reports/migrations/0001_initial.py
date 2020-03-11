@@ -17,18 +17,21 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Report',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('owner', models.CharField(max_length=255)),
                 ('location', models.CharField(max_length=255)),
-                ('amount_charged', models.FloatField()),
+                ('amount', models.FloatField()),
                 ('client', models.CharField(max_length=255)),
-                ('purpose', models.CharField(choices=[('MORTGAGE', 'MORTGAGE'), ('EXPROPRIATION', 'EXPROPRIATION'), ('EVALUATION', 'EVALUATION')], max_length=100)),
+                ('purpose', models.CharField(choices=[('MORTGAGE', 'MORTGAGE'), (
+                    'EXPROPRIATION', 'EXPROPRIATION'), ('EVALUATION', 'EVALUATION')], max_length=100)),
                 ('inspection_date', models.DateField()),
                 ('plot_no', models.CharField(max_length=255, unique=True)),
                 ('report_payed_for', models.BooleanField(default=False)),
                 ('reason_for_not_paying', models.TextField()),
                 ('updated_at', models.DateField(auto_now_add=True)),
-                ('created_by', models.ForeignKey(max_length=255, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('created_by', models.ForeignKey(max_length=255,
+                                                 on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
