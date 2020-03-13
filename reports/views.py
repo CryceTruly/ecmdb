@@ -122,8 +122,9 @@ def report_edit(request, id):
         amount = request.POST['amount']
         purpose = request.POST['purpose']
         bank = request.POST['bank']
+
         if not owner:
-            messages.error(request,  'Asset Owner fullname is required')
+            messages.error(request,  'Owner fullname is required')
             has_error = True
         if not purpose:
             messages.error(request,  'Purpose is required')
@@ -151,32 +152,24 @@ def report_edit(request, id):
         if not bank:
             has_error = True
             messages.error(request,  'Client Bank is required')
-
         if not has_error:
-            try:
-                get_object_or_404(plot_no=request.POST['plot_no'])
+            report = Report.objects.get(id=id)
+            report.location = location
+            report. amount = amount
+            report.client = bank
+            report.purpose = purpose
+            report.owner = owner
+            report.contact = contact
+            report.plot_no = plot_no
+            report.inspection_date = inspection_date
+            report.delivery_date = delivery_date
+            report.report_payed_for = True
+            report.reason_for_not_paying = 'N/A'
+            report.save()
+            messages.success(request, 'Report Updated Successfully')
+            return redirect('report', id)
+        else:
 
-                has_error = True
-                messages.error(request,  'Plot Number Exists')
-                return render(request, 'reports/add_report.html', context)
-            except Exception as identifier:
-                pass
-        if not has_error:
-            rep = Report.objects.update(created_by=request.user,
-                                        owner=owner,
-                                        location=location,
-                                        amount=amount,
-                                        client=bank,
-                                        purpose=purpose,
-                                        contact=contact,
-                                        plot_no=plot_no,
-                                        inspection_date=inspection_date,
-                                        delivery_date=delivery_date,
-                                        report_payed_for=True,
-                                        reason_for_not_paying='N/A')
-
-            if rep:
-                messages.success(request, 'Report Updated Successfully')
-                return redirect('report', id=id)
+            return render(request, 'reports/edit-report.html',  context)
 
         return render(request, 'reports/edit-report.html', {'values': report})

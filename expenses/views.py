@@ -7,7 +7,8 @@ from django.contrib import messages
 
 @login_required(login_url='/accounts/login')
 def expenses(request):
-    expenses = Expense.objects.filter(requester=request.user)
+    expenses = Expense.objects.filter(
+        requester=request.user).order_by('-updated_at')
     context = {
         'expenses': expenses
     }
@@ -16,9 +17,6 @@ def expenses(request):
 
 @login_required(login_url='/accounts/login')
 def expenses_add(request):
-
-    if not request.user:
-        return redirect('login')
     if request.method == 'GET':
         return render(request, 'expenses/new.html')
     amount = request.POST['amount']
@@ -41,6 +39,27 @@ def expenses_add(request):
 
 
 @login_required(login_url='/accounts/login')
+def expense_edit(request, id):
+    if request.method == 'GET':
+        return render(request, 'expenses/index.html')
+    amount = request.POST['amount']
+    purpose = request.POST['purpose']
+    if not amount:
+        messages.error(request,  'Amount is required')
+        return redirect('expenses')
+    if not purpose:
+        messages.error(request,  'Reason for the request is required')
+        return redirect('expenses')
+    expense = Expense.objects.get(id=id)
+    expense.amount = amount
+    expense.purpose = purpose
+    expense.save()
+
+    messages.success(request,  'Expense updated successfully')
+    return redirect('expenses')
+
+
+@login_required(login_url='/accounts/login')
 def expense_delete(request):
     expenses = Expense.objects.all()
     context = {
@@ -54,14 +73,5 @@ def expense_detail(request):
     expenses = Expense.objects.all()
     context = {
         'expenses': expenses
-    }
-    return render('expenses/index.html', context)
-
-
-@login_required(login_url='/accounts/login')
-def expense_edit(request):
-    expenses = Expense.objects.all()
-    context = {
-        expenses: expenses
     }
     return render('expenses/index.html', context)

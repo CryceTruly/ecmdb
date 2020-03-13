@@ -19,13 +19,13 @@ class Report(models.Model):
     amount = models.FloatField(max_length=255)
     client = models.CharField(max_length=255)
     purpose = models.CharField(max_length=100, choices=PURPOSE_CHOICES)
-    inspection_date = models.DateField()
+    inspection_date = models.CharField(max_length=255)
     contact = models.CharField(max_length=255)
     plot_no = models.CharField(
         null=False, blank=False, unique=True, max_length=255)
     report_payed_for = models.BooleanField(default=False)
     reason_for_not_paying = models.TextField()
-    delivery_date = models.DateField()
+    delivery_date = models.CharField(max_length=255)
     updated_at = models.DateField(auto_now=True)
     created_at = models.DateField(auto_now_add=True)
 
