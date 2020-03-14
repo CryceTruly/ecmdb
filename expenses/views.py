@@ -7,12 +7,21 @@ from django.contrib import messages
 
 @login_required(login_url='/accounts/login')
 def expenses(request):
-    expenses = Expense.objects.filter(
-        requester=request.user).order_by('-updated_at')
-    context = {
-        'expenses': expenses
-    }
-    return render(request=request, template_name='expenses/index.html', context=context)
+
+    if request.user.role == 'TECHNICIAN':
+        expenses = Expense.objects.filter(
+            requester=request.user).order_by('-updated_at')
+        context = {
+            'expenses': expenses
+        }
+        return render(request=request, template_name='expenses/index.html', context=context)
+
+    if request.user.role == 'ACCOUNTANT':
+        expenses = Expense.objects.all()
+        context = {
+            'expenses': expenses
+        }
+        return render(request=request, template_name='expenses/all_expenses.html', context=context)
 
 
 @login_required(login_url='/accounts/login')
@@ -28,14 +37,24 @@ def expenses_add(request):
         messages.error(request,  'Reason for the request is required')
         return redirect('expenses')
 
-    expense = Expense.objects.create(
-        amount=amount, purpose=purpose, requester=request.user)
+    expense = None
+
+    if request.user.role == 'ACCOUNTANT':
+        expense = Expense.objects.create(
+            amount=amount, purpose=purpose, requester=request.user, status='APPROVED')
+    else:
+        expense = Expense.objects.create(
+            amount=amount, purpose=purpose, requester=request.user)
 
     if expense:
         messages.success(request,  'Request was submitted successfully')
         return redirect('expenses')
 
-    return render(request=request, template_name='expenses/index.html', context=context)
+    if expense:
+        messages.success(request,  'Request was submitted successfully')
+        return redirect('expenses')
+
+    return render(request=request, template_name='expenses/index.html')
 
 
 @login_required(login_url='/accounts/login')
@@ -75,3 +94,12 @@ def expense_detail(request):
         'expenses': expenses
     }
     return render('expenses/index.html', context)
+
+
+@login_required(login_url='/accounts/login')
+def approve_expense(request, id):
+    expense = Expense.objects.get(id=id)
+    expense.status = 'APPROVED'
+    expense.save()
+    messages.success(request, 'Request approved')
+    return redirect('expenses')
