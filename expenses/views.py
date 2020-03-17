@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Expense
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -11,17 +12,37 @@ def expenses(request):
     if request.user.role == 'TECHNICIAN':
         expenses = Expense.objects.filter(
             requester=request.user).order_by('-updated_at')
+
+        paginator = Paginator(expenses, 7)  # Show 7 items per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         context = {
-            'expenses': expenses
+            'expenses': expenses,
+            'page_obj': page_obj
         }
         return render(request=request, template_name='expenses/index.html', context=context)
 
     if request.user.role == 'ACCOUNTANT':
         expenses = Expense.objects.all()
+        paginator = Paginator(expenses, 7)  # Show 7 items per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         context = {
-            'expenses': expenses
+            'expenses': expenses,
+            'page_obj': page_obj
         }
         return render(request=request, template_name='expenses/all_expenses.html', context=context)
+
+    if request.user.role == 'BOSS':
+        expenses = Expense.objects.all()
+        paginator = Paginator(expenses, 7)  # Show 7 items per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'expenses': expenses,
+            'page_obj': page_obj
+        }
+        return render(request=request, template_name='expenses/admin_all_expenses.html', context=context)
 
 
 @login_required(login_url='/accounts/login')

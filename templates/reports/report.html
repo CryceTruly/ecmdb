@@ -10,14 +10,27 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">Reports</a></li>
-    <li class="breadcrumb-item active" aria-current="page">My Reports</li>
+    <li class="breadcrumb-item active" aria-current="page"> Report</li>
     <li class="breadcrumb-item active" aria-current="page">Details</li>
   </ol>
 </nav>
 </div>
 
 <div class="col-md-2">
-<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'report-edit' report.id %}">Edit Report</a></button>
+{% if user.role == 'BOSS'  %}
+
+ {% if report.approved %}
+<button type="button" class="btn btn-outline-info disabled">APPROVED<i< class="fa fa-check-double"></i></button>{% endif %}
+
+{% if not report.approved %}
+
+<button type="button" class="btn btn-lg btn-outline-success">
+<a href="{% url 'report-approve' report.id %}"> APPROVE</a>{% endif %}
+
+  {% endif %}
+</button>
+ {% if user.role == 'TECHNICIAN'  %}
+<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'report-edit' report.id %}">  Edit Report{% endif %}</button> </a>
 </div>
 </div>
      {% include 'partials/_alerts.html'%}
@@ -33,7 +46,7 @@
   <hr>
 
 
-  <h5 class="card-title">Contact <span class="float-right">{{report.contact}}</span></h5>
+  <h5 class="card-title">Contact  {{report.approved}}<span class="float-right">{{report.contact}}</span></h5>
   <hr>
   <h5 class="card-title">Inspection Date <span class="float-right">{{report.inspection_date}}</span></h5>
   <hr>

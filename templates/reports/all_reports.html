@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %} | My Reports {% endblock %}
+
+{% load static %}
+
+ {% block content %}
+
+<div class="row mt-4 ml-3 mr-3">
+<div class="col-md-12">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Reports</a></li>
+    <li class="breadcrumb-item active" aria-current="page">All Reports</li>
+  </ol>
+</nav>
+</div>
+
+</div>
+     {% include 'partials/_alerts.html'%}
+     {% if not reports.count %}
+<div class="my-1 p-5">
+<h3>No submitted reports yet </h3>
+</div>
+{% else %}
+
+     <div class="row ml-1 mr-1">
+     <div class="col-md-12">
+     <form class="form-inline my-2 my-lg-0 float-right p-2">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">  Plot No</th>
+<th scope="col">Owner Name</th>
+<th scope="col">Location</th>
+<th scope="col">Contact</th>
+<th scope="col">Inspection Date</th>
+      <th scope="col">Amount (RWF)</th>
+
+      <th scope="col">Bank</th>
+      <th scope="col">Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for report in page_obj%}
+
+    <tr>
+      <th scope="row">{{report.plot_no}}</th>
+   <td>{{report.owner}}</td>
+   <td>{{report.location}}</td>
+    <td>{{report.contact}}</td>
+     <td>{{report.delivery_date}}</td>
+        <td>{{report.amount}}</td>
+    <td>{{report.client}}</td>
+      <td>{{report.purpose}}</td>
+      <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
+       <td>{% if user.role == 'BOSS'  %}
+
+ {% if report.approved %}
+<button type="button" class="btn btn-outline-info disabled">APPROVED<i class="fa fa-check-double"></i></button>{% endif %}
+
+{% if not report.approved %}
+
+<button type="button" class="btn btn-outline-success">
+<a href="{% url 'report-approve' report.id %}"> APPROVE</a>{% endif %}
+
+  {% endif %}</td>
+
+    </tr>
+
+
+{% endfor %}
+
+  </tbody>
+
+
+
+</table>
+
+ {% endif %}
+
+  <div class="container ">
+<span class="current">
+       Showing     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+<ul class="pagination align-right float-right mr-auto">
+        {% if page_obj.has_previous %}
+            <li {% if page_obj.number == 1 %}  class="page-item active" {% endif %}><a  class="page-link" href="?page=1">&laquo; 1</a></li>
+           <li class="page-item">  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">   <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+           <li class="page-item">    <a   class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages}} &raquo;</a></li>
+        {% endif %}
+
+
+</ul>
+
+     </div>
+
+     </div>
+
+{% endblock content %}
