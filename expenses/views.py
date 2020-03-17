@@ -12,7 +12,6 @@ def expenses(request):
     if request.user.role == 'TECHNICIAN':
         expenses = Expense.objects.filter(
             requester=request.user).order_by('-updated_at')
-
         paginator = Paginator(expenses, 7)  # Show 7 items per page.
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)

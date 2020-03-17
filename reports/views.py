@@ -18,11 +18,14 @@ def index(request):
             'reports': reports,
             'page_obj': page_obj
         }
-
-    return render(request, 'reports/all_reports.html', context)
-
+        return render(request, 'reports/all_reports.html', context)
+    reports = Report.objects.filter(created_by=request.user)
+    paginator = Paginator(reports, 7)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
-        'my_reports': Report.objects.filter(created_by=request.user)
+        'my_reports': reports,
+        'page_obj': page_obj
     }
     return render(request, 'reports/index.html', context)
 
