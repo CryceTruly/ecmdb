@@ -28,6 +28,7 @@ class Report(models.Model):
     delivery_date = models.CharField(max_length=255)
     updated_at = models.DateField(auto_now=True)
     created_at = models.DateField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return self.purpose

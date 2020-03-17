@@ -23,6 +23,8 @@ def login(request):
                 return redirect('accounts')
             if user.role == 'TECHNICIAN':
                 return redirect('technician')
+            if user.role == 'BOSS':
+                return redirect('boss')
 
         messages.error(request,  'Invalid credentials')
         return render(request, 'accounts/login.html',
@@ -34,7 +36,7 @@ def login(request):
 def logout(request):
     if request.method == "POST":
         auth.logout(request)
-        messages.success(request,  'You are now logout')
+        messages.success(request,  'You are now logged out')
         return redirect('index')
     return render(request, "accounts/login.html")
 
@@ -53,3 +55,10 @@ def technician(request):
         "reports": []
     }
     return render(request, "accounts/technician.html", context)
+
+
+def boss(request):
+    context = {
+        'reports': []
+    }
+    return render(request, "accounts/boss.html", context)

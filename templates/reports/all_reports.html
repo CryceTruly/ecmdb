@@ -5,25 +5,21 @@
 
  {% block content %}
 
-<div class="row mt-2 ml-3">
-<div class="col-md-10">
+<div class="row mt-4 ml-3 mr-3">
+<div class="col-md-12">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">Reports</a></li>
-    <li class="breadcrumb-item active" aria-current="page">My Reports</li>
+    <li class="breadcrumb-item active" aria-current="page">All Reports</li>
   </ol>
 </nav>
 </div>
 
-<div class="col-md-2">
-<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
-</div>
 </div>
      {% include 'partials/_alerts.html'%}
-     {% if not my_reports.count %}
+     {% if not reports.count %}
 <div class="my-1 p-5">
 <h3>No submitted reports yet </h3>
-<a href="{% url 'add_report' %}">Submit your first</a>
 </div>
 {% else %}
 
@@ -59,7 +55,18 @@
         <td>{{report.amount}}</td>
     <td>{{report.client}}</td>
       <td>{{report.purpose}}</td>
-       <td><a href="{% url 'report-edit' report.id %}" class="btn btn-sm btn-info">Edit</a></td>  <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
+      <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
+       <td>{% if user.role == 'BOSS'  %}
+
+ {% if report.approved %}
+<button type="button" class="btn btn-outline-info disabled">APPROVED<i class="fa fa-check-double"></i></button>{% endif %}
+
+{% if not report.approved %}
+
+<button type="button" class="btn btn-outline-success">
+<a href="{% url 'report-approve' report.id %}"> APPROVE</a>{% endif %}
+
+  {% endif %}</td>
 
     </tr>
 
@@ -67,7 +74,13 @@
 {% endfor %}
 
   </tbody>
+
+
+
 </table>
+
+ {% endif %}
+
   <div class="container ">
 <span class="current">
        Showing     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
@@ -85,9 +98,6 @@
 
 
 </ul>
-
-     </div>
- {% endif %}
 
      </div>
 

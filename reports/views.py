@@ -4,19 +4,34 @@ from django.contrib import messages
 from .models import Report
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 @login_required(login_url='/accounts/login')
 def index(request):
+    if request.user.role == 'BOSS':
+        reports = Report.objects.all().order_by('approved')
+        paginator = Paginator(reports, 7)  # Show 1 items per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'reports': reports,
+            'page_obj': page_obj
+        }
+        return render(request, 'reports/all_reports.html', context)
+    reports = Report.objects.filter(created_by=request.user)
+    paginator = Paginator(reports, 7)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
-        'my_reports': Report.objects.filter(created_by=request.user)
+        'my_reports': reports,
+        'page_obj': page_obj
     }
     return render(request, 'reports/index.html', context)
 
 
 @login_required(login_url='/accounts/login')
 def add_report(request):
-
     if request.method == 'GET':
         return render(request, 'reports/add_report.html')
     if request.method == 'POST':
@@ -96,7 +111,6 @@ def add_report(request):
 @login_required(login_url='/accounts/login')
 def report(request, id):
     report = Report.objects.get(id=id)
-
     return render(request, 'reports/report.html', {'report': report})
 
 
@@ -173,3 +187,12 @@ def report_edit(request, id):
             return render(request, 'reports/edit-report.html',  context)
 
         return render(request, 'reports/edit-report.html', {'values': report})
+
+
+@login_required(login_url='/accounts/login')
+def report_approve(request, id):
+    report = Report.objects.get(id=id)
+    report.approved = True
+    report.save()
+    messages.success(request, 'Report Approved Successfully')
+    return redirect('report', id)
