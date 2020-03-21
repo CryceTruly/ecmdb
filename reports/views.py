@@ -5,6 +5,24 @@ from .models import Report
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+import json
+from django.db.models import Q
+
+
+def search_reports(request):
+    data = request.body.decode('utf-8')
+    search_val = json.loads(data).get('data')
+    reports = Report.objects.filter(plot_no__icontains=search_val) | Report.objects.filter(
+        location__startswith=search_val) | Report.objects.filter(
+        owner__icontains=search_val) | Report.objects.filter(
+        purpose__icontains=search_val) | Report.objects.filter(
+        client__icontains=search_val) | Report.objects.filter(
+        delivery_date__icontains=search_val) | Report.objects.filter(
+        contact__icontains=search_val) | Report.objects.filter(
+        created_by__email__icontains=search_val)
+    data = list(reports.values())
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url='/accounts/login')

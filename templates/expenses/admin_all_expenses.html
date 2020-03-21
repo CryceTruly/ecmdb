@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block title %} | Dashboard {% endblock %}
 {% block content %}
+{% load static %}
 {% load humanize %}
+
 <!-- Alerts -->
 
 <section id="dashboard" class="py-4">
@@ -66,9 +68,30 @@
 
 {% else %}
  <form class="form-inline my-2 my-lg-0 float-right p-2">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" type="search" id="search"  placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0 search-btn" type="submit">Search</button>
     </form>
+
+
+     <div class="search-output-area">
+     <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">  Requester</th>
+      <th scope="col">Amount (RWF)</th>
+      <th scope="col">Purpose</th>
+      <th scope="col">Date</th>
+      <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody class="result-rows">
+
+        </tbody>
+      </table>
+</div>
+
+
+    <div class='table-area'>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -104,8 +127,9 @@
 
   </tbody>
 </table>
+<div>
 
-<div class="container ">
+<div class="container container-pagination">
 <span class="current">
        Showing     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
@@ -129,5 +153,11 @@
 {% endif %}
   </div>
   </div>
+
 </section>
-{%endblock%}
+
+<script src={% static 'js/expenses.js' %}>
+
+</script>
+
+{%endblock content%}

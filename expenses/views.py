@@ -3,7 +3,21 @@ from .models import Expense
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-# Create your views here.
+from .filters import ExpenseFilter
+from django.http import JsonResponse
+import json
+
+
+def search_expenses(request):
+    data = request.body.decode('utf-8')
+    search_val = json.loads(data).get('data')
+    reports = Expense.objects.filter(purpose__icontains=search_val) | Expense.objects.filter(
+        amount__startswith=search_val) | Expense.objects.filter(
+        requested_on__icontains=search_val) | Expense.objects.filter(
+        status__icontains=search_val) | Expense.objects.filter(
+        submitted_by_name__icontains=search_val)
+    data = list(reports.values())
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url='/accounts/login')
@@ -23,12 +37,15 @@ def expenses(request):
 
     if request.user.role == 'ACCOUNTANT':
         expenses = Expense.objects.all()
+        expense_filter = ExpenseFilter(request.GET, queryset=expenses)
+
         paginator = Paginator(expenses, 7)  # Show 7 items per page.
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context = {
             'expenses': expenses,
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            'filter': expense_filter
         }
         return render(request=request, template_name='expenses/all_expenses.html', context=context)
 
@@ -61,10 +78,10 @@ def expenses_add(request):
 
     if request.user.role == 'ACCOUNTANT':
         expense = Expense.objects.create(
-            amount=amount, purpose=purpose, requester=request.user, status='APPROVED')
+            amount=amount, purpose=purpose, requester=request.user, status='APPROVED', submitted_by_name=request.user.email)
     else:
         expense = Expense.objects.create(
-            amount=amount, purpose=purpose, requester=request.user)
+            amount=amount, purpose=purpose, requester=request.user, submitted_by_name=request.user.email)
 
     if expense:
         messages.success(request,  'Request was submitted successfully')
