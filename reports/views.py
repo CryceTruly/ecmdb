@@ -10,19 +10,33 @@ import json
 from django.db.models import Q
 
 
+@login_required(login_url='/accounts/login')
 def search_reports(request):
     data = request.body.decode('utf-8')
     search_val = json.loads(data).get('data')
-    reports = Report.objects.filter(plot_no__icontains=search_val) | Report.objects.filter(
-        location__startswith=search_val) | Report.objects.filter(
-        owner__icontains=search_val) | Report.objects.filter(
-        purpose__icontains=search_val) | Report.objects.filter(
-        client__icontains=search_val) | Report.objects.filter(
-        delivery_date__icontains=search_val) | Report.objects.filter(
-        contact__icontains=search_val) | Report.objects.filter(
-        created_by__email__icontains=search_val)
-    data = list(reports.values())
-    return JsonResponse(data, safe=False)
+
+    if(request.user.role == 'BOSS'):
+        reports = Report.objects.filter(plot_no__icontains=search_val) | Report.objects.filter(
+            location__startswith=search_val) | Report.objects.filter(
+            owner__icontains=search_val) | Report.objects.filter(
+            purpose__icontains=search_val) | Report.objects.filter(
+            client__icontains=search_val) | Report.objects.filter(
+            delivery_date__icontains=search_val) | Report.objects.filter(
+            contact__icontains=search_val) | Report.objects.filter(
+            created_by__email__icontains=search_val)
+        data = list(reports.values())
+        return JsonResponse(data, safe=False)
+    if(request.user.role == 'TECHNICIAN'):
+        reports = Report.objects.filter(plot_no__icontains=search_val, created_by=request.user) | Report.objects.filter(
+            location__startswith=search_val, created_by=request.user) | Report.objects.filter(
+            owner__icontains=search_val, created_by=request.user) | Report.objects.filter(
+            purpose__icontains=search_val, created_by=request.user) | Report.objects.filter(
+            client__icontains=search_val, created_by=request.user) | Report.objects.filter(
+            delivery_date__icontains=search_val, created_by=request.user) | Report.objects.filter(
+            contact__icontains=search_val, created_by=request.user) | Report.objects.filter(
+            created_by__email__icontains=search_val, created_by=request.user)
+        data = list(reports.values())
+        return JsonResponse(data, safe=False)
 
 
 @login_required(login_url='/accounts/login')

@@ -8,15 +8,26 @@ from django.http import JsonResponse
 import json
 
 
+@login_required(login_url='/accounts/login')
 def search_expenses(request):
     data = request.body.decode('utf-8')
     search_val = json.loads(data).get('data')
-    reports = Expense.objects.filter(purpose__icontains=search_val) | Expense.objects.filter(
+
+    if request.user.role == 'TECHNICIAN':
+        expenses = Expense.objects.filter(purpose__icontains=search_val, requester=request.user) | Expense.objects.filter(
+            amount__startswith=search_val, requester=request.user) | Expense.objects.filter(
+            requested_on__icontains=search_val, requester=request.user) | Expense.objects.filter(
+            status__icontains=search_val, requester=request.user) | Expense.objects.filter(
+            submitted_by_name__icontains=search_val, requester=request.user)
+        data = list(expenses.values())
+        return JsonResponse(data, safe=False)
+
+    expenses = Expense.objects.filter(purpose__icontains=search_val) | Expense.objects.filter(
         amount__startswith=search_val) | Expense.objects.filter(
         requested_on__icontains=search_val) | Expense.objects.filter(
         status__icontains=search_val) | Expense.objects.filter(
         submitted_by_name__icontains=search_val)
-    data = list(reports.values())
+    data = list(expenses.values())
     return JsonResponse(data, safe=False)
 
 
