@@ -97,14 +97,12 @@ def add_report(request):
             messages.error(request,  'Client Bank is required')
 
         if not has_error:
-            try:
-                get_object_or_404(plot_no=request.POST['plot_no'])
-
+            num_results = Report.objects.filter(
+                plot_no=request.POST['plot_no'].upper()).count()
+            if num_results > 0:
                 has_error = True
-                messages.error(request,  'Plot Number Exists')
+                messages.error(request,  'Report with this plot number Exists')
                 return render(request, 'reports/add_report.html', context)
-            except Exception as identifier:
-                pass
         if not has_error:
             rep = Report.objects.create(created_by=request.user,
                                         owner=owner,
@@ -113,7 +111,7 @@ def add_report(request):
                                         client=bank,
                                         purpose=purpose,
                                         contact=contact,
-                                        plot_no=plot_no,
+                                        plot_no=plot_no.upper(),
                                         inspection_date=inspection_date,
                                         delivery_date=delivery_date,
                                         report_payed_for=True,
