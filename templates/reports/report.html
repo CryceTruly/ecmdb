@@ -61,7 +61,20 @@
    </div>
   <div class="card-footer bg-transparent border-success">
 
-  <h5 class="card-title">File<span class="float-right btn btn-outline-primary btn-sm">Download</span></h5>
+  <h5 class="card-title"><strong>Document </strong> <small>
+
+  {% if report.report_file %}
+
+  {{report.report_file.url}} <span class="float-right btn btn-outline-primary btn-sm"><a href="{{report.report_file.url}}" target="_blank">Download</a></span>
+
+  {% else %}
+No File
+
+
+
+  {% endif %}
+
+   </small></h5>
 
   </div>
 </div>

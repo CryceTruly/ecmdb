@@ -9,6 +9,7 @@ from django.http import JsonResponse
 import json
 from django.db.models import Q
 from company.models import Company
+from django.core.files.storage import FileSystemStorage
 
 
 @login_required(login_url='/accounts/login')
@@ -81,6 +82,19 @@ def add_report(request):
         amount = request.POST['amount']
         purpose = request.POST['purpose']
         bank = request.POST['bank']
+        report_file = request.FILES and request.FILES['report_file']
+        # context.values.report_file = report_file
+
+        if not report_file:
+            messages.error(request,  'Please choose a report file document')
+            has_error = True
+
+        # fs = FileSystemStorage()
+        # filename = fs.save(report_file.name, report_file)
+        # uploaded_file_url = fs.url(filename)
+        # if not uploaded_file_url:
+        #     messages.error(request,  'Report document File is required')
+        #     has_error = True
         if not owner:
             messages.error(request,  'Asset Owner fullname is required')
             has_error = True
@@ -125,6 +139,7 @@ def add_report(request):
                                         amount=amount,
                                         client=bank,
                                         purpose=purpose,
+                                        report_file=report_file,
                                         contact=contact,
                                         plot_no=plot_no.upper(),
                                         inspection_date=inspection_date,
@@ -142,6 +157,7 @@ def add_report(request):
 @login_required(login_url='/accounts/login')
 def report(request, id):
     report = Report.objects.get(id=id)
+    url = request.build_absolute_uri
     return render(request, 'reports/report.html', {'report': report})
 
 
@@ -174,6 +190,13 @@ def report_edit(request, id):
         amount = request.POST['amount']
         purpose = request.POST['purpose']
         bank = request.POST['bank']
+        report_file = request.FILES and request.FILES['report_file']
+        # context.values.report_file = report_file
+
+        if not report_file:
+            messages.error(
+                request,  'Please choose a report file document')
+            has_error = True
 
         if not owner:
             messages.error(request,  'Owner fullname is required')
@@ -212,6 +235,7 @@ def report_edit(request, id):
             report.purpose = purpose
             report.owner = owner
             report.contact = contact
+            report.report_file = report_file,
             report.plot_no = plot_no
             report.inspection_date = inspection_date
             report.delivery_date = delivery_date

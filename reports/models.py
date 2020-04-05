@@ -29,6 +29,7 @@ class Report(models.Model):
     updated_at = models.DateField(auto_now=True)
     created_at = models.DateField(auto_now_add=True)
     approved = models.BooleanField(default=False)
+    report_file = models.FileField(upload_to='documents')
 
     def __str__(self):
         return self.purpose

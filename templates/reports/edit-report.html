@@ -19,7 +19,7 @@
 <div class="col-md-2">
 <button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'report' values.id %}">Details</a></button>
 </div>
-<form action="{%url 'report-edit' values.id%}" method="POST" autocomplete="off">
+<form action="{%url 'report-edit' values.id%}" method="POST" autocomplete="off" enctype="multipart/form-data">
               {% csrf_token%}
               {% include 'partials/_alerts.html'%}
 <div class="form-row">
@@ -43,7 +43,7 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inspection_date">Inspection Date</label>
-      <input type="date" class="form-control"  value="{{ values.contact }}" id="inspection_date" name="inspection_date">
+      <input type="date" class="form-control"  value="{{ values.inspection_date }}" id="inspection_date" name="inspection_date">
     </div>
     <div class="form-group col-md-6">
       <label for="delivery_date">Date of Report Delivery</label>
@@ -78,11 +78,8 @@
 </div>
   <div class="form-group col-md-6">
 
-<label for="pdf_file">Choose a report file</label>
-  <div class="custom-file">
-  <input type="file" name="pdf_file" class="custom-file-input" id="customFile" value="{{ values.pdf_file }}">
-  <label class="custom-file-label" name="pdf_file" for="pdf_file">Choose Report file</label>
-</div>
+<label for="report_file">Choose a report file</label>
+  <input type="file" name="report_file" class="btn btn-default"  id="customFile" value="{{ values.report_file }}">
   </div>
 
 </div>
