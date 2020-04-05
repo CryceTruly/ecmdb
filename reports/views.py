@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 import json
 from django.db.models import Q
+from company.models import Company
 
 
 @login_required(login_url='/accounts/login')
@@ -43,7 +44,7 @@ def search_reports(request):
 def index(request):
     if request.user.role == 'BOSS':
         reports = Report.objects.all().order_by('approved')
-        paginator = Paginator(reports, 7)  # Show 1 items per page.
+        paginator = Paginator(reports, 7)  # Show 7 items per page.
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context = {
@@ -145,6 +146,13 @@ def report(request, id):
 
 
 @login_required(login_url='/accounts/login')
+def report_reciept(request, id):
+    report = Report.objects.get(id=id)
+    company = Company.objects.first()
+    return render(request, 'reports/reciept.html', {'report': report, 'company': company})
+
+
+@login_required(login_url='/accounts/login')
 def report_edit(request, id):
 
     if request.method == 'GET':
@@ -213,7 +221,6 @@ def report_edit(request, id):
             messages.success(request, 'Report Updated Successfully')
             return redirect('report', id)
         else:
-
             return render(request, 'reports/edit-report.html',  context)
 
         return render(request, 'reports/edit-report.html', {'values': report})

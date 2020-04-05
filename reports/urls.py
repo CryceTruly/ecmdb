@@ -8,5 +8,7 @@ urlpatterns = [
     path('report/<int:id>', views.report, name="report"),
     path('report/edit/<int:id>', views.report_edit, name="report-edit"),
     path('reports/search_reports', views.search_reports, name='search_reports'),
-    path('report/approve/<int:id>', views.report_approve, name='report-approve')
+    path('report/approve/<int:id>', views.report_approve, name='report-approve'),
+    path('reports/make-reciept/<int:id>',
+         views.report_reciept, name='make-reciept')
 ]

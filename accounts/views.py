@@ -20,11 +20,11 @@ def login(request):
             messages.success(request,  'Welcome ' +
                              user.email+'  You are now logged in')
             if user.role == 'ACCOUNTANT':
-                return redirect('accounts')
+                return redirect('expenses')
             if user.role == 'TECHNICIAN':
-                return redirect('technician')
+                return redirect('reports')
             if user.role == 'BOSS':
-                return redirect('boss')
+                return redirect('reports')
 
         messages.error(request,  'Invalid credentials')
         return render(request, 'accounts/login.html',

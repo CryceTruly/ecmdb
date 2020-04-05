@@ -77,8 +77,11 @@
       <td>{{report.purpose}}</td>
        <td>{{report.created_by}}</td>
         <td>{{report.created_at}}</td>
-      <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
-       <td>{% if user.role == 'BOSS'  %}
+      <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a>
+ </td>
+ <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
+
+      <td>{% if user.role == 'BOSS'  %}
 
  {% if report.approved %}
 <button type="button" class="btn btn-outline-info disabled">APPROVED<i class="fa fa-check-double"></i></button>{% endif %}

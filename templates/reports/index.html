@@ -81,6 +81,8 @@
     <td>{{report.client}}</td>
       <td>{{report.purpose}}</td>
        <td><a href="{% url 'report-edit' report.id %}" class="btn btn-sm btn-info">Edit</a></td>  <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
+ <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
+
 
     </tr>
 
