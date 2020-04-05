@@ -66,12 +66,17 @@ def index(request):
 
 @login_required(login_url='/accounts/login')
 def add_report(request):
+    banks = Bank.objects.all()
+    context = {
+        'banks': banks}
     if request.method == 'GET':
-        return render(request, 'reports/add_report.html')
+        return render(request, 'reports/add_report.html', context)
     if request.method == 'POST':
+        banks = Bank.objects.all()
         has_error = False
         context = {
-            'values': request.POST
+            'values': request.POST,
+            'banks': banks
         }
         owner = request.POST['owner']
         contact = request.POST['contact']
@@ -172,14 +177,19 @@ def report_reciept(request, id):
 def report_edit(request, id):
 
     if request.method == 'GET':
+        banks = Bank.objects.all()
         report = Report.objects.get(id=id)
-        return render(request, 'reports/edit-report.html', {'values': report})
+        context = {
+            'values': report,
+            'banks': banks}
+        return render(request, 'reports/edit-report.html', context)
     if request.method == 'POST':
         report = Report.objects.get(id=id)
 
         has_error = False
         context = {
-            'values': request.POST
+            'values': request.POST,
+            'banks': Bank.objects.all()
         }
         owner = request.POST['owner']
         contact = request.POST['contact']

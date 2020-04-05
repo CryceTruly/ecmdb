@@ -58,9 +58,9 @@
     <div class="form-group col-md-6">
       <label for="bank">Bank</label>
     <select class="form-control" id="bank" name="bank" value="{{ values.bank }}" >
-      <option name="bank">Equity</option>
-      <option name="bank">Bank Of Kigali</option>
-      <option name="bank">KCB</option>
+       {% for bank in banks %}
+       <option name="bank">{{bank.name}}</option>
+    {% endfor %}
     </select>
     </div>
   </div>

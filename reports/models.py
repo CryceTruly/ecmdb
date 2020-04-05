@@ -31,5 +31,8 @@ class Report(models.Model):
     approved = models.BooleanField(default=False)
     report_file = models.FileField(upload_to='documents')
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.purpose
