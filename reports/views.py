@@ -58,10 +58,13 @@ def index(request):
     paginator = Paginator(reports, 7)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    comments = Comment.objects.all()
     context = {
         'my_reports': reports,
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'comments': comments
     }
+
     return render(request, 'reports/index.html', context)
 
 
@@ -159,8 +162,7 @@ def add_report(request):
 @login_required(login_url='/accounts/login')
 def report(request, id):
     report = Report.objects.get(id=id)
-    url = request.build_absolute_uri
-    comments = Comment.objects.filter(report=report)
+    comments = Comment.objects.filter(report_id=id)
     return render(request, 'reports/report.html', {'report': report, 'comments': comments})
 
 
@@ -279,13 +281,15 @@ def add_report_comments(request, id):
     if not comment:
         has_error = True
         messages.error(request,  'Please add your comment')
-        rep = Comment.objects.create(created_by=request.user,
-                                     message=comment,
-                                     report=Report.objects.get(pk=id))
+    if has_error:
+        return render(request, 'reports/add_comment.html', {'id': id})
+    rep = Comment.objects.create(created_by=request.user,
+                                 message=comment,
+                                 report=Report.objects.get(id=id))
 
-        if rep:
-            messages.success(request, 'Comment added  Successfully')
-            return redirect('report', id)
+    if rep:
+        messages.success(request, 'Comment added  Successfully')
+        return redirect('report', id)
 
 
 @login_required(login_url='/accounts/login')

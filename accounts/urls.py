@@ -7,7 +7,3 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("logout", views.logout, name="logout"),
 ]
-
-# path("accounts", views.accounts, name="accounts"),
-# path("technician", views.technician, name="technician"),
-# path("boss", views.boss, name="boss")

@@ -119,10 +119,13 @@
          {% if ex.status == 'APPROVED' %}
              <td>
 
-             <button type="button" class="btn btn-default btn-sm disabled" data-toggle="modal" data-target="#exampleModal1">APPROVED  <i class="fas icon fa-check-double active"></i></button></td>
+             <button type="button" class="btn btn-default btn-sm disabled"
+              data-toggle="modal" data-target="#exampleModal1">APPROVED
+              <i class="fas icon fa-check-double active"></i></button></td>
         {% endif %}
 
       {% if requester.role == 'ACCOUNTANT' %}
+
 
             <td>
               <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal1">Edit</button>

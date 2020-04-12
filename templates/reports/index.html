@@ -69,6 +69,7 @@
   </thead>
   <tbody>
 {% for report in page_obj%}
+
     <tr class="text-sm-left small">
       <th scope="row">{{report.plot_no}}</th>
    <td>{{report.owner}}</td>
@@ -77,13 +78,17 @@
         <td>{{report.amount}}</td>
     <td>{{report.client}}</td>
       <td>{{report.purpose}}</td>
+      <td> {% if user.role == 'BOSS' or user.role == 'TECHNICIAN' %}
+<span class="badge badge-light"><i class="fa fa-comment" color="red"></i> {{report.comments.count}}</span>
+
+
+{% endif %}</td>
        <td><a href="{% url 'report-edit' report.pk %}" class="btn btn-sm btn-info">Edit</a></td>  <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a></td>
  {% if user.role == 'BOSS' or user.role == 'ACCOUNTANT' %}
  <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
 {% endif %}
 
     </tr>
-
 
 {% endfor %}
 

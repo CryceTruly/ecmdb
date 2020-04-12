@@ -2,11 +2,11 @@
 {% block title %} | My Reports {% endblock %}
 
 {% load static %}
-
+{% load humanize %}
  {% block content %}
 
 <div class="row mt-4 ml-3">
-<div class="col-md-10">
+<div class="col-md-9">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'reports'%}">Reports</a></li>
@@ -16,7 +16,7 @@
 </nav>
 </div>
 
-<div class="col-md-2">
+<div class="col-md-3">
 
 {% if user.role == 'ACCOUNTANT'  %}
 <a href="{% url 'make-reciept' report.id %}" type="button" class="btn btn-outline-dark mt-1">RECIEPT<i class="fa fa-print"></i></a>{% endif %}
@@ -24,7 +24,9 @@
 
 {% if user.role == 'BOSS'  %}
 
-<a href="{% url 'add_report_comments' report.id %}" type="button" class="btn btn-outline-dark mt-1">Comment<i class="fa fa-comment"></i></a>{% endif %}
+<span><a href="{% url 'add_report_comments' report.id %}" type="button" class="btn btn-outline-dark mt-1">Comment<i class="fa fa-comment"></i></a>
+
+</span>
  {% if report.approved %}
 <button type="button" class="btn btn-outline-info disabled">APPROVED<i< class="fa fa-check-double"></i></button>{% endif %}
 
@@ -71,6 +73,8 @@
   {% endif %}
    </div>
 
+
+
   <div class="card-footer bg-transparent border-success">
 
   <h6 class="card-title"><strong>Document </strong> <small>
@@ -89,6 +93,39 @@ No File
    </small></h6>
 
   </div>
+
+{% if user.role != 'ACCOUNTANT'%}
+    <div class="card-footer bg-transparent border-success">
+
+  <h6 class="card-title"><strong>Comments </strong> <small></h6>
+
+  {%if  comments.count  %}
+  {% for comment in  comments %}
+
+
+  <div class="list-group">
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1"></h5>
+      <small>{{comment.created_at | naturaltime}}</small>
+    </div>
+    <p class="mb-1">{{comment.message}}</p>
+    <small>{{comment.created_by.email}}</small>
+  </a>
+</div>
+
+
+  {% endfor %}
+
+  {% else %}
+No Comments
+  {% endif %}
+
+   </small></h6>
+
+  </div>
+
+{% endif %}
 </div>
 
      </div>

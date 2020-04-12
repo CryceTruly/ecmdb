@@ -9,29 +9,33 @@
 <div class="col-md-10">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Reports</a></li>
-    <li class="breadcrumb-item active" aria-current="page">My Reports</li>
+    <li class="breadcrumb-item"><a href="{% url 'reports'%}">Reports</a></li>
+    <li class="breadcrumb-item active">Reports</li>
+    <li class="breadcrumb-item active" aria-current="page">{{id}}</li>
   </ol>
 </nav>
 </div>
 
 <div class="col-md-2">
-<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
+<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'report' id %}">Back</a></button>
 </div>
 </div>
-     {% include 'partials/_alerts.html'%}
+
      <div class="row">
-     <div class="col-md-12">
+     <div class="col-md-9 ml-4">
+       {% include 'partials/_alerts.html'%}
      <h4>Add Comment to  <span>Report </span></h4>
-<form>
+<form action="{%url 'add_report_comments' id %}" method="POST" autocomplete="off">
+              {% csrf_token%}
   <div class="form-group">
     <label for="exampleFormControlTextarea1">Comment</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-  <button type="submit" class="btn btn-primary mb-2">Confirm Comment</button>
+    <textarea class="form-control" name="message" id="exampleFormControlTextarea1" rows="3"></textarea>
+  <button type="submit" class="btn btn-primary mb-2 mt-2">Submit Comment</button>
   </div>
 </form>
-
      </div>
+      <div class="col-md-3">
+      </div>
 
 
      </div>
