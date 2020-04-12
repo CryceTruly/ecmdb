@@ -9,7 +9,8 @@ env:
   - SECRET_KEY='secretstuff'
 
 install:
-  - pip install -r requirements.txt
+  - pipenv shell
+  - pipenv install
 
 script:
   - echo 'hello'
