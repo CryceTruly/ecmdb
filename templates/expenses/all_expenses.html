@@ -19,7 +19,7 @@
 </div>
 
 <div class="col-md-2">
-<button type="button" class="btn btn-outline-success btn-lg" data-toggle="modal" data-target="#exampleModal">Add Expense</button>
+<button type="button" class="btn btn-outline-success " data-toggle="modal" data-target="#exampleModal">Add Expense</button>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -96,6 +96,7 @@
       <th scope="col">Purpose</th>
       <th scope="col">Status</th>
       <th scope="col">Date</th>
+
     </tr>
   </thead>
   <tbody>
@@ -105,8 +106,8 @@
       <td>{{ex.requester}}</td>
       <td>{{ex.amount}}</td>
       <td>{{ex.purpose}}</td>
-      <td>{{ex.status}}</td>
-
+  {% if ex.status == 'PENDING' %}<td class="text-default">{{ex.status}}</td>{% endif %}
+  {% if ex.status == 'APPROVED' %}<td class="text-success">{{ex.status}}</td>{% endif %}
       <td>{{ex.requested_on | date:'Y/m/d' }}</td>
        {% if ex.status == 'PENDING' %}
              <td>
@@ -118,10 +119,11 @@
         {% endif %}
          {% if ex.status == 'APPROVED' %}
              <td>
-
-             <button type="button" class="btn btn-default btn-sm disabled"
-              data-toggle="modal" data-target="#exampleModal1">APPROVED
-              <i class="fas icon fa-check-double active"></i></button></td>
+                <form action="{% url 'approve_expense' ex.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger btn-sm" value='DISAPPROVE'>
+            </form>
+            </td>
         {% endif %}
 
       {% if requester.role == 'ACCOUNTANT' %}

@@ -36,14 +36,14 @@
 			<div class="details clearfix">
 				<div class="client left">
 					<p>Reciept To:</p>
-					<p class="name">Mutabazi Alelluia</p>
-					<p>Kacyiru Gasabo Kigali RW</p>
-					<a href="mailto:alleluia@gmail.com">alleluia@gmail.com</a>
+					<p class="name">{{report.owner}}</p>
+					<p>{{report.location}}</p>
+					<a href="mailto:alleluia@gmail.com">{{report.contact}}</a>
 				</div>
 				<div class="data right">
-					<div class="title">Reciept 999</div>
+					<div class="title">{{report.pk}}</div>
 					<div class="date">
-						Date of Reciept: 01/06/2020
+						Date of Reciept: {% now "jS F Y" %}
 					</div>
 				</div>
 			</div>
@@ -58,10 +58,10 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td class="desc"><h3>Property Inspection</h3>Inspection of property plot 17 on Kachiru street</td>
+						<td class="desc">{{report.purpose}} of property  Plot No {{report.plot_no}} on {{report.location}}</td>
 
 						<td class="unit"></td>
-						<td class="total">RWF 1,5000.00</td>
+						<td class="total">RWF {{report.amount}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -71,7 +71,7 @@
 						<tr>
 							<td class="desc"></td>
 							<td class="unit" colspan="2">GRAND TOTAL:</td>
-							<td class="total">RWF 100,000.0</td>
+							<td class="total">RWF {{report.amount}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -93,7 +93,7 @@
 
 	</div>
 
-	<center id="doc-button"><button class="btn btn-lg btn-success" id="doc-button">PRINT RECIEPT</button></center>
+	<center id="doc-button"><button class="btn  btn-success" id="doc-button">PRINT RECIEPT</button></center>
 
 		</div>
 

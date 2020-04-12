@@ -186,7 +186,10 @@ def expense_detail(request):
 @login_required(login_url='/accounts/login')
 def approve_expense(request, id):
     expense = Expense.objects.get(id=id)
-    expense.status = 'APPROVED'
+    if expense.status == 'APPROVED':
+        expense.status = 'PENDING'
+    else:
+        expense.status = 'APPROVED'
     expense.save()
-    messages.success(request, 'Request approved')
+    messages.success(request, 'Expense  status updated')
     return redirect('expenses')

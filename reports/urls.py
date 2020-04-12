@@ -9,6 +9,9 @@ urlpatterns = [
     path('report/edit/<int:id>', views.report_edit, name="report-edit"),
     path('search_reports', views.search_reports, name='search_reports'),
     path('report/approve/<int:id>', views.report_approve, name='report-approve'),
+
+    path('report/report_verification/<int:id>',
+         views.report_verified, name='report_verified'),
     path('make-reciept/<int:id>',
          views.report_reciept, name='make-reciept'),
     path('stats', views.report_stats, name="report-summary"),

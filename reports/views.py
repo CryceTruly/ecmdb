@@ -243,7 +243,6 @@ def report_edit(request, id):
             report.purpose = purpose
             report.owner = owner
             report.contact = contact
-
             report.plot_no = plot_no
             report.inspection_date = inspection_date
             report.delivery_date = delivery_date
@@ -261,10 +260,26 @@ def report_edit(request, id):
 @login_required(login_url='/accounts/login')
 def report_approve(request, id):
     report = Report.objects.get(id=id)
-    report.approved = True
+    if report.approved == True:
+        report.approved = False
+    else:
+        report.approved = True
     report.save()
-    messages.success(request, 'Report Approved Successfully')
+    messages.success(request, 'Report status updated Successfully')
     return redirect('report', id)
+
+
+@login_required(login_url='/accounts/login')
+def report_verified(request, id):
+    report = Report.objects.get(id=id)
+    if report.paid == True:
+        report.paid = False
+    else:
+        report.paid = True
+    report.save()
+    messages.success(
+        request, 'Payment verification status updated Successfully')
+    return redirect('reports')
 
 
 @login_required(login_url='/accounts/login')

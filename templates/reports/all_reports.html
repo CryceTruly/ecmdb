@@ -58,6 +58,7 @@
 <th scope="col">Location</th>
       <th scope="col">Amount (RWF)</th>
       <th scope="col">Technician</th>
+        {% if user.role == 'ACCOUNTANT' %}<th scope="col">Paid</th>{% endif %}
     </tr>
   </thead>
   <tbody>
@@ -69,19 +70,26 @@
    <td>{{report.location}}</td>
         <td>{{report.amount}}</td>
        <td>{{report.created_by}}</td>
+        {% if user.role == 'ACCOUNTANT' %}<td scope="col">
+         <a href={% url 'report_verified' report.id%}   {% if report.paid %}  class=  "btn btn-success"
+          {% else %} class=  "btn btn-danger"   {% endif %}>
+         {% if not report.paid %}
+          <i class="fa fa-window-close"></i>
+         {% endif %} {% if report.paid %}<i class="fa fa-check"></i>{% endif %}</button>
+        </td>{% endif %}
       <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a>
  </td>
   {% if user.role == 'ACCOUNTANT' %}
  <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
 {% endif %}
  {% if user.role == 'BOSS' %}
- <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
+ <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info btn-sm"><i class="fa fa-print"></i></a></td>
 {% endif %}
       <td>{% if user.role == 'BOSS'  %}
 
  {% if report.approved %}
-<button type="button" class="btn btn-outline-info disabled">APPROVED<i class="fa fa-check-double"></i></button>{% endif %}
-
+<a href="{% url 'report-approve' report.id %}" class="btn btn-outline-danger btn-sm"> DISAPPROVE</a>
+{% endif %}
 {% if not report.approved %}
 
 <button type="button" class="btn btn-outline-success">

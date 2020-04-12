@@ -17,7 +17,7 @@
 </div>
 
 <div class="col-md-2">
-<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
+<button type="button" class="btn  btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
 </div>
 <form action="{%url 'add_report'%}" method="POST" autocomplete="off"  enctype="multipart/form-data">
               {% csrf_token%}

@@ -29,6 +29,7 @@ class Report(models.Model):
     created_at = models.DateField(auto_now_add=True)
     approved = models.BooleanField(default=False)
     report_file = models.FileField(upload_to='documents')
+    paid = models.BooleanField(default=False)
 
 
 class Comment(models.Model):

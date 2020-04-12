@@ -37,28 +37,5 @@ def logout(request):
     if request.method == "POST":
         auth.logout(request)
         messages.success(request,  'You are now logged out')
-        return redirect('index')
+        return redirect('login')
     return render(request, "accounts/login.html")
-
-
-@login_required(login_url='/accounts/login')
-def accounts(request):
-    context = {
-        "expenses": []
-    }
-    return render(request, "accounts/accounts.html", context)
-
-
-@login_required(login_url='/accounts/login')
-def technician(request):
-    context = {
-        "reports": []
-    }
-    return render(request, "accounts/technician.html", context)
-
-
-def boss(request):
-    context = {
-        'reports': []
-    }
-    return render(request, "accounts/boss.html", context)

@@ -28,17 +28,19 @@
 
 </span>
  {% if report.approved %}
-<button type="button" class="btn btn-outline-info disabled">APPROVED<i< class="fa fa-check-double"></i></button>{% endif %}
 
+<a href="{% url 'report-approve' report.id %}" class="btn btn-outline-danger"> DISAPPROVE</a>
+
+{% endif %}
 {% if not report.approved %}
 
-<button type="button" class="btn btn-lg btn-outline-success">
+<button type="button" class="btn btn-outline-success">
 <a href="{% url 'report-approve' report.id %}"> APPROVE</a>{% endif %}
 
   {% endif %}
 </button>
  {% if user.role == 'TECHNICIAN'  %}
-<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'report-edit' report.id %}">  Edit Report{% endif %}</button> </a>
+<button type="button" class="btn btn-outline-success"><a href="{% url 'report-edit' report.id %}">  Edit Report{% endif %}</button> </a>
 </div>
 </div>
      {% include 'partials/_alerts.html'%}
@@ -67,6 +69,15 @@
   <h6 class="card-title">Purpose <span class="float-right">{{report.purpose}}</span></h6>
   <hr>
   <h6 class="card-title">Sumitted On <span class="float-right">{{report.created_at}}</span></h6>
+
+  <hr>
+  <h6 class="card-title">Payment Verified <span class="float-right">  {% if report.paid %}<i class="fa fa-check-double" color="green"></i>{% endif %}
+
+
+
+  {% if not report.paid %}<i class="fa fa-window-close"  color="red"></i>{% endif %}
+
+   </span></h6>
     <hr>
 {% if user.role != 'TECHNICIAN'%}
   <h6 class="card-title">Technician <span class="float-right">{{report.created_by.email}}</span></h6>
