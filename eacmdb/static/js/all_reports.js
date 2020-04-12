@@ -8,10 +8,10 @@ const currentPaginator = document.querySelector(".container-pagination");
 tableArea.style.display = "block";
 outputArea.style.display = "none";
 currentPaginator.style.display = "block";
-const showResults = data => {
+const showResults = (data) => {
   for (let report = 0; report < data.length; report++) {
     resultRows.innerHTML += `
-        <tr>
+        <tr class="text-sm-left small">
         <th scope=\"row\">${data[report].plot_no}</th>
      <td>${data[report].owner}</td>
      <td>${data[report].location}</td>
@@ -26,7 +26,7 @@ const showResults = data => {
   }
 };
 
-const searchItems = e => {
+const searchItems = (e) => {
   resultRows.innerHTML = ``;
   e.preventDefault();
   function getCookie(name) {
@@ -50,13 +50,13 @@ const searchItems = e => {
     return;
   }
 
-  fetch("reports/search_reports", {
+  fetch("/reports/search_reports", {
     method: "POST",
     headers: { "X-CSRFToken": csrftoken },
-    body: JSON.stringify({ data: field.value.trim() })
+    body: JSON.stringify({ data: field.value.trim() }),
   })
-    .then(data => data.json())
-    .then(data => {
+    .then((data) => data.json())
+    .then((data) => {
       tableArea.style.display = "none";
       outputArea.style.display = "block";
       currentPaginator.style.display = "none";
@@ -67,10 +67,10 @@ const searchItems = e => {
         resultRows.innerHTML += `<p class="text-info lead">No Results Found for query <strong>${field.value.trim()}</strong></p>`;
       }
     })
-    .catch(err => err);
+    .catch((err) => err);
 };
 
-field.addEventListener("keyup", function(e) {
+field.addEventListener("keyup", function (e) {
   if (field.value.trim().length > 0) {
     searchItems(e);
   } else {

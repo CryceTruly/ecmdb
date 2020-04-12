@@ -31,7 +31,7 @@
     </form>
 
      <div class="search-output-area">
-     <table class="table table-striped">
+     <table class="table table-hover table-striped table-sm">
         <thead>
           <tr>
             <th scope="col">  Plot No</th>
@@ -41,7 +41,6 @@
       <th scope="col">Inspection Date</th>
             <th scope="col">Amount (RWF)</th>
             <th scope="col">Bank</th>
-            <th scope="col">Purpose</th>
           </tr>
         </thead>
         <tbody class="result-rows">
@@ -51,36 +50,33 @@
 </div>
 
     <div class="table-area">
-<table class="table table-striped">
+<table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
       <th scope="col">  Plot No</th>
 <th scope="col">Owner Name</th>
 <th scope="col">Location</th>
       <th scope="col">Amount (RWF)</th>
-      <th scope="col">Bank</th>
-      <th scope="col">Purpose</th>
       <th scope="col">Technician</th>
-
-      <th scope="col">Added</th>
     </tr>
   </thead>
   <tbody>
 {% for report in page_obj%}
 
-    <tr>
+    <tr class="text-sm-left small">
       <th scope="row">{{report.plot_no}}</th>
    <td>{{report.owner}}</td>
    <td>{{report.location}}</td>
         <td>{{report.amount}}</td>
-    <td>{{report.client}}</td>
-      <td>{{report.purpose}}</td>
        <td>{{report.created_by}}</td>
-        <td>{{report.created_at}}</td>
       <td><a href="{% url 'report' report.id %}" class="btn btn-sm btn-secondary">Details</a>
  </td>
+  {% if user.role == 'ACCOUNTANT' %}
  <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
-
+{% endif %}
+ {% if user.role == 'BOSS' %}
+ <td><a type="button" href="{% url 'make-reciept' report.id %}" class="btn btn-outline-info"><i class="fa fa-print"></i></a></td>
+{% endif %}
       <td>{% if user.role == 'BOSS'  %}
 
  {% if report.approved %}

@@ -10,6 +10,7 @@ import json
 from django.db.models import Q
 from company.models import Company
 from django.core.files.storage import FileSystemStorage
+from reports.models import Comment
 
 
 @login_required(login_url='/accounts/login')
@@ -17,7 +18,7 @@ def search_reports(request):
     data = request.body.decode('utf-8')
     search_val = json.loads(data).get('data')
 
-    if(request.user.role == 'BOSS'):
+    if request.user.role in ['BOSS', 'ACCOUNTANT']:
         reports = Report.objects.filter(plot_no__icontains=search_val) | Report.objects.filter(
             location__startswith=search_val) | Report.objects.filter(
             owner__icontains=search_val) | Report.objects.filter(
@@ -43,7 +44,7 @@ def search_reports(request):
 
 @login_required(login_url='/accounts/login')
 def index(request):
-    if request.user.role == 'BOSS':
+    if request.user.role == 'BOSS' or request.user.role == 'ACCOUNTANT':
         reports = Report.objects.all().order_by('approved')
         paginator = Paginator(reports, 7)  # Show 7 items per page.
         page_number = request.GET.get('page')
@@ -67,6 +68,7 @@ def index(request):
 @login_required(login_url='/accounts/login')
 def add_report(request):
     banks = Bank.objects.all()
+
     context = {
         'banks': banks}
     if request.method == 'GET':
@@ -88,18 +90,9 @@ def add_report(request):
         purpose = request.POST['purpose']
         bank = request.POST['bank']
         report_file = request.FILES and request.FILES['report_file']
-        # context.values.report_file = report_file
-
         if not report_file:
             messages.error(request,  'Please choose a report file document')
             has_error = True
-
-        # fs = FileSystemStorage()
-        # filename = fs.save(report_file.name, report_file)
-        # uploaded_file_url = fs.url(filename)
-        # if not uploaded_file_url:
-        #     messages.error(request,  'Report document File is required')
-        #     has_error = True
         if not owner:
             messages.error(request,  'Asset Owner fullname is required')
             has_error = True
@@ -110,6 +103,10 @@ def add_report(request):
         if not contact:
             has_error = True
             messages.error(request,  'Owner Contact is required')
+        if contact and len(contact) is not 10:
+            has_error = True
+            messages.error(
+                request,  'The Contact phone should be  10 characters')
         if not location:
             has_error = True
             messages.error(request,  'Location is required')
@@ -163,7 +160,8 @@ def add_report(request):
 def report(request, id):
     report = Report.objects.get(id=id)
     url = request.build_absolute_uri
-    return render(request, 'reports/report.html', {'report': report})
+    comments = Comment.objects.filter(report=report)
+    return render(request, 'reports/report.html', {'report': report, 'comments': comments})
 
 
 @login_required(login_url='/accounts/login')
@@ -175,7 +173,6 @@ def report_reciept(request, id):
 
 @login_required(login_url='/accounts/login')
 def report_edit(request, id):
-
     if request.method == 'GET':
         banks = Bank.objects.all()
         report = Report.objects.get(id=id)
@@ -185,7 +182,6 @@ def report_edit(request, id):
         return render(request, 'reports/edit-report.html', context)
     if request.method == 'POST':
         report = Report.objects.get(id=id)
-
         has_error = False
         context = {
             'values': request.POST,
@@ -201,13 +197,6 @@ def report_edit(request, id):
         purpose = request.POST['purpose']
         bank = request.POST['bank']
         report_file = request.FILES and request.FILES['report_file']
-        # context.values.report_file = report_file
-
-        if not report_file:
-            messages.error(
-                request,  'Please choose a report file document')
-            has_error = True
-
         if not owner:
             messages.error(request,  'Owner fullname is required')
             has_error = True
@@ -218,6 +207,10 @@ def report_edit(request, id):
         if not contact:
             has_error = True
             messages.error(request,  'Owner Contact is required')
+        if contact and len(contact) is not 10:
+            has_error = True
+            messages.error(
+                request,  'The Contact phone should be  10 characters')
         if not location:
             has_error = True
             messages.error(request,  'Location is required')
@@ -239,13 +232,16 @@ def report_edit(request, id):
             messages.error(request,  'Client Bank is required')
         if not has_error:
             report = Report.objects.get(id=id)
+
+            if report_file:
+                report.report_file = report_file
             report.location = location
             report. amount = amount
             report.client = bank
             report.purpose = purpose
             report.owner = owner
             report.contact = contact
-            report.report_file = report_file,
+
             report.plot_no = plot_no
             report.inspection_date = inspection_date
             report.delivery_date = delivery_date
@@ -253,9 +249,9 @@ def report_edit(request, id):
             report.reason_for_not_paying = 'N/A'
             report.save()
             messages.success(request, 'Report Updated Successfully')
-            return redirect('report', id)
+            return redirect('report', report.pk)
         else:
-            return render(request, 'reports/edit-report.html',  context)
+            return redirect('report-edit', report.pk)
 
         return render(request, 'reports/edit-report.html', {'values': report})
 
@@ -267,3 +263,65 @@ def report_approve(request, id):
     report.save()
     messages.success(request, 'Report Approved Successfully')
     return redirect('report', id)
+
+
+@login_required(login_url='/accounts/login')
+def add_report_comments(request, id):
+    if request.method == 'GET':
+        return render(request, 'reports/add_comment.html', {'id': id})
+    if request.method == 'POST':
+        has_error = False
+        context = {
+            'values': request.POST,
+        }
+        comment = request.POST['message']
+
+    if not comment:
+        has_error = True
+        messages.error(request,  'Please add your comment')
+        rep = Comment.objects.create(created_by=request.user,
+                                     message=comment,
+                                     report=Report.objects.get(pk=id))
+
+        if rep:
+            messages.success(request, 'Comment added  Successfully')
+            return redirect('report', id)
+
+
+@login_required(login_url='/accounts/login')
+def report_stats(request):
+    today = Report.objects.filter(created_at='2020-03-11')
+    context = {
+        'today': 20000,
+        'this_week': 200000,
+        'this_month': 30000,
+        'this_year': 400000000, 'all_time': 400000000000
+    }
+    return render(request, 'reports/stats.html', context)
+
+
+def report_stats_rest(request):
+    months = {
+        "Jan": 30000,
+        "Feb": 40000,
+        "Mar": 50000,
+        "Apr": 40000,
+        "May": 50000,
+        "Jun": 50000,
+        "Jul": 50000,
+        "Aug": 50000,
+        "Sept": 50000,
+        "Nov": 50000,
+        "Dec": 50000
+    }
+    days = {
+        "Mon": 30000,
+        "Tue": 40000,
+        "Wed": 50000,
+        "Thur": 40000,
+        "Fri": 50000,
+        "Sat": 50000,
+        "Sun": 50000,
+    }
+    data = {"months": months, "days": days}
+    return JsonResponse({'data': data}, safe=False)

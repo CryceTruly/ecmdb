@@ -31,8 +31,17 @@ class Report(models.Model):
     approved = models.BooleanField(default=False)
     report_file = models.FileField(upload_to='documents')
 
+
+class Comment(models.Model):
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                   max_length=255, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    message = models.TextField()
+    updated_at = models.DateField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+
     class Meta:
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.purpose
+        return self.message

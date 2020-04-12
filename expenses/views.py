@@ -136,6 +136,45 @@ def expense_delete(request):
 
 
 @login_required(login_url='/accounts/login')
+def expense_summary(request):
+    today = Expense.objects.filter(approval_date='2020-03-11')
+    context = {
+        'today': 20000,
+        'this_week': 200000,
+        'this_month': 30000,
+        'this_year': 400000000, 'all_time': 400000000000
+    }
+    return render(request, 'expenses/summary.html', context)
+
+
+def expense_summary_rest(request):
+    months = {
+        "Jan": 30000,
+        "Feb": 40000,
+        "Mar": 50000,
+        "Apr": 40000,
+        "May": 50000,
+        "Jun": 50000,
+        "Jul": 50000,
+        "Aug": 50000,
+        "Sept": 50000,
+        "Nov": 50000,
+        "Dec": 50000
+    }
+    days = {
+        "Mon": 30000,
+        "Tue": 40000,
+        "Wed": 50000,
+        "Thur": 40000,
+        "Fri": 50000,
+        "Sat": 50000,
+        "Sun": 50000,
+    }
+    data = {"months": months, "days": days}
+    return JsonResponse({'data': data}, safe=False)
+
+
+@login_required(login_url='/accounts/login')
 def expense_detail(request):
     expenses = Expense.objects.all()
     context = {

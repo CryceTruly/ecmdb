@@ -15,6 +15,7 @@ class Expense(models.Model):
     requested_on = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     submitted_by_name = models.CharField(max_length=255)
+    approval_date = models.DateField(auto_now=True)
     status = models.CharField(
         max_length=255, choices=EXPENSE_STATUSES, default='PENDING')
     requester = models.ForeignKey(settings.AUTH_USER_MODEL,

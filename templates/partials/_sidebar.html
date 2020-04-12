@@ -1,36 +1,126 @@
-{% load static%}
-{% block content %}
 
-<div class="sidebar-container" style="color: white;" id="wrapper">
-    <div class="" id="sidebar-wrapper">
-        <i class="fas fa-house-damage fa-2x center"></i>
-
-
-        <div class="sidebar-container-items" style="display: flex; flex-direction: column;">
-        {% if user.role == 'ACCOUNTANT' %}
-            <a href="{% url 'expenses' %}" class=""><i class="fas icon fa-hand-holding-usd"></i>All Expenses</a>
-
-        {% endif %}
-
-         {% if user.role == 'TECHNICIAN' %}
-            <a href="{% url 'reports' %}" class=""><i class="fas  icon fa-clipboard"></i> My Reports</a>
-            <a href="{% url 'expenses' %}" class=""><i class="fas icon fa-hand-holding-usd"></i>Expenses</a>
-         {% endif %}
-
-
-          {% if user.role == 'BOSS' %}
-            <a href="{% url 'reports' %}" class=""><i class="fas  icon fa-clipboard"></i> All Reports</a>
-            <a href="{% url 'expenses' %}" class=""><i class="fas icon fa-hand-holding-usd"></i>All Expenses</a>
-         {% endif %}
-
-              <form action="{% url 'logout' %}" method="POST">
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">EACMDB</a>
+       <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+        <a> <span class="pr-3">{{ request.user.email }}</span>
+            <small class="pr-3  text-sm text-monospace">({{ request.user.role }})</small></a>
+          <a>
+           <form action="{% url 'logout' %}" method="POST" style="display:inline">
             {% csrf_token %}
            <i class="fas icon fa-sign-out-alt"></i>
             <input type="submit" class="logout-link" value='Logout' href="{% url 'login' %}">
             </form>
-        </div>
-    </div>
+            </a>
+        </li>
+      </ul>
+    </nav>
 
-    {% endblock %}
-</div>
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
 
+ <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+
+              <span>Home</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <i class="fa fa-home"></i>
+              </a>
+            </h6>
+             {% if user.role == 'TECHNICIAN' %}
+                <li class="nav-item">
+
+               <a href="{% url 'reports' %}" class="nav-link"><i class="fa fa-file"></i>   My Reports</a>
+
+              </li>
+               <li class="nav-item">
+
+                 <a href="{% url 'expenses' %}" class="nav-link">    <i class="fa fa-money-bill"></i>  My Expenses</a>
+
+              </li>
+               {% endif %}
+                 {% if user.role == 'BOSS' %}
+                <li class="nav-item">
+
+               <a href="{% url 'reports' %}" class="nav-link"><i class="fa fa-file"></i>  Reports</a>
+
+              </li>
+               <li class="nav-item">
+
+
+                 <a href="{% url 'expenses' %}" class="nav-link">  <i class="fa fa-money-bill"></i> Expenses</a>
+             </li>
+               {% endif %}
+                 {% if user.role == 'ACCOUNTANT' %}
+                    <li class="nav-item">
+
+                 <a href="{% url 'expenses' %}" class="nav-link">  <i class="fa fa-money-bill"></i> Expenses</a>
+             </li>
+                <li class="nav-item">
+
+               <a href="{% url 'reports' %}" class="nav-link"><i class="fa fa-file"></i>  Reports</a>
+
+              </li>
+
+               {% endif %}
+
+
+
+            </ul>
+
+
+  {% if user.role == 'BOSS' %}
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Summary</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <i class="fa fa-book"></i>
+              </a>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'summary' %}" >
+                  <i class="fa fa-chart-line"></i>
+                  Expenses
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'report-summary' %}">
+                  <i class="fa fa-chart-line"></i>
+                  Reports
+                </a>
+              </li>
+
+            </ul>
+            {% endif %}
+
+              {% if user.role == 'ACCOUNTANT' %}
+
+
+ <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+<span>Summary</span>
+              <a class="d-flex align-items-center text-muted" href="{% url 'summary'%}">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+
+
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'summary' %}" >
+                  <span data-feather="file-text"></span>
+                  Expenses
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'report-summary' %}">
+                  <span data-feather="file-text"></span>
+                  Reports
+                </a>
+              </li>
+
+            </ul>
+            {% endif %}
+          </div>
+        </nav>

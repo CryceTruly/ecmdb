@@ -17,8 +17,8 @@ def login(request):
         user = User.objects.filter(email=username, password=password).first()
         if user is not None:
             auth.login(request, user)
-            messages.success(request,  'Welcome ' +
-                             user.email+'  You are now logged in')
+            messages.success(request,  'Welcome  ' +
+                             user.email+'  you are now logged in')
             if user.role == 'ACCOUNTANT':
                 return redirect('expenses')
             if user.role == 'TECHNICIAN':

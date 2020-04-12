@@ -25,20 +25,20 @@
 <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputEmail4">Name of the Owner</label>
-      <input type="text" class="form-control" id="inputEmail4" name="owner"  value="{{ values.owner }}" placeholder="Full Name">
+      <input type="text" class="form-control" id="inputEmail4" name="owner"  value="{{ values.owner }}" placeholder="">
     </div>
     <div class="form-group col-md-6">
       <label for="contact">Contact</label>
-      <input type="text" class="form-control" id="contact" value="{{ values.contact }}"  name="contact" placeholder="0wner Contact">
+      <input type="tel" class="form-control" id="contact" value="{{ values.contact }}"  name="contact" placeholder="">
     </div>
   </div>
   <div class="form-group">
     <label for="inputAddress">Location</label>
-    <input type="text" class="form-control" id="inputAddress" value="{{ values.location }}" name="location" placeholder="KG 17 Main Street">
+    <input type="text" class="form-control" id="inputAddress" value="{{ values.location }}" name="location" placeholder="">
   </div>
   <div class="form-group">
     <label for="plot_no">Plot Number</label>
-    <input type="text" class="form-control" id="plot_no"  value="{{ values.plot_no }}" name="plot_no" placeholder="17">
+    <input type="text" class="form-control" id="plot_no"  value="{{ values.plot_no }}" name="plot_no" placeholder="">
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
@@ -82,7 +82,9 @@
   <div class="form-group col-md-6">
 
 <label for="report_file">Choose a report file</label>
-  <input type="file" name="report_file" class="btn btn-default"  id="customFile" value="{{ values.report_file }}">
+  <input type="file" name="report_file" accept=
+"application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+text/plain, application/pdf," class="btn btn-default"  id="customFile" value="{{ values.report_file }}">
   </div>
 
 </div>

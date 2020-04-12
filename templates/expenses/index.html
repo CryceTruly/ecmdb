@@ -74,7 +74,7 @@
       <button class="btn btn-outline-success my-2 my-sm-0 search-btn" type="submit">Search</button>
     </form>
          <div class="search-output-area">
-     <table class="table table-striped">
+     <table class="table table-hover table-striped table-sm">
         <thead>
           <tr>
       <th scope="col">Amount (RWF)</th>
@@ -90,7 +90,7 @@
 </div>
 
     <div class='table-area'>
-<table class="table table-striped">
+<table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
       <th scope="col">Amount (RWF)</th>
@@ -102,10 +102,10 @@
   <tbody>
 {% for ex in page_obj%}
 
-    <tr>
+     <tr class="text-sm-left small">
       <td>{{ex.amount}}</td>
       <td>{{ex.purpose}}</td>
-      <td>{{ex.requested_on}}</td>
+      <td>{{ex.requested_on|date:'d/m/Y' }}</td>
 
       {% if ex.status == 'APPROVED' %}  <td> <button type="button" class="btn btn-default btn-sm disabled">APPROVED  <i class="fas icon fa-check-double" style="color:#006699"></i></button></td>
    {% endif %}

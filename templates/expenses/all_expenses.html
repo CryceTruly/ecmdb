@@ -7,9 +7,6 @@
 
 <section id="dashboard" class="py-4">
   <div class="container">
-
-
-
 <div class="row">
 <div class="col-md-10">
 
@@ -74,7 +71,7 @@
       <button class="btn btn-outline-success my-2 my-sm-0 search-btn" type="submit">Search</button>
     </form>
          <div class="search-output-area">
-     <table class="table table-striped">
+     <table class="table table-hover table-striped table-sm">
         <thead>
           <tr>
             <th scope="col">  Requester</th>
@@ -91,7 +88,7 @@
 </div>
 
     <div class='table-area'>
-<table class="table table-striped">
+<table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
       <th scope="col">Requester</th>
@@ -104,13 +101,13 @@
   <tbody>
 {% for ex in page_obj%}
 
-    <tr>
+    <tr class="text-sm-left small">
       <td>{{ex.requester}}</td>
       <td>{{ex.amount}}</td>
       <td>{{ex.purpose}}</td>
       <td>{{ex.status}}</td>
 
-      <td>{{ex.requested_on}}</td>
+      <td>{{ex.requested_on | date:'Y/m/d' }}</td>
        {% if ex.status == 'PENDING' %}
              <td>
 
@@ -121,7 +118,6 @@
         {% endif %}
          {% if ex.status == 'APPROVED' %}
              <td>
-
 
              <button type="button" class="btn btn-default btn-sm disabled" data-toggle="modal" data-target="#exampleModal1">APPROVED  <i class="fas icon fa-check-double active"></i></button></td>
         {% endif %}

@@ -5,11 +5,11 @@
 
  {% block content %}
 
-<div class="row mt-2 ml-3">
+<div class="row mt-4 ml-3">
 <div class="col-md-10">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Reports</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'reports'%}">Reports</a></li>
     <li class="breadcrumb-item active" aria-current="page"> Report</li>
     <li class="breadcrumb-item active" aria-current="page">Details</li>
   </ol>
@@ -17,8 +17,14 @@
 </div>
 
 <div class="col-md-2">
+
+{% if user.role == 'ACCOUNTANT'  %}
+<a href="{% url 'make-reciept' report.id %}" type="button" class="btn btn-outline-dark mt-1">RECIEPT<i class="fa fa-print"></i></a>{% endif %}
+
+
 {% if user.role == 'BOSS'  %}
 
+<a href="{% url 'add_report_comments' report.id %}" type="button" class="btn btn-outline-dark mt-1">Comment<i class="fa fa-comment"></i></a>{% endif %}
  {% if report.approved %}
 <button type="button" class="btn btn-outline-info disabled">APPROVED<i< class="fa fa-check-double"></i></button>{% endif %}
 
@@ -40,28 +46,34 @@
 <div class="card mb-3">
   <div class="card-header bg-transparent border-success">Plot No <span class="float-right">{{report.plot_no}}</span></div>
   <div class="card-body">
-    <h5 class="card-title">Owner Name <span class="float-right">{{report.owner}}</span></h5>
+    <h6 class="card-title">Owner Name <span class="float-right">{{report.owner}}</span></h6>
   <hr>
-  <h5 class="card-title">Location <span class="float-right">{{report.location}}</span></h5>
+  <h6 class="card-title">Location <span class="float-right">{{report.location}}</span></h6>
   <hr>
 
 
-  <h5 class="card-title">Contact<span class="float-right">{{report.contact}}</span></h5>
+  <h6 class="card-title">Contact<span class="float-right">{{report.contact}}</span></h6>
   <hr>
-  <h5 class="card-title">Inspection Date <span class="float-right">{{report.inspection_date}}</span></h5>
+  <h6 class="card-title">Inspection Date <span class="float-right">{{report.inspection_date}}</span></h6>
   <hr>
-  <h5 class="card-title">Date of Delivery <span class="float-right">{{report.delivery_date}}</span></h5>
+  <h6 class="card-title">Date of Delivery <span class="float-right">{{report.delivery_date}}</span></h6>
   <hr>
-  <h5 class="card-title">Amount Charged <span class="float-right">{{report.amount}}</span></h5>
+  <h6 class="card-title">Amount Charged <span class="float-right">{{report.amount}}</span></h6>
     <hr>
-  <h5 class="card-title">Bank <span class="float-right">{{report.client}}</span></h5>
+  <h6 class="card-title">Bank <span class="float-right">{{report.client}}</span></h6>
   <hr>
-  <h5 class="card-title">Purpose <span class="float-right">{{report.purpose}}</span></h5>
-  <h5 class="card-title">Sumitted On <span class="float-right">{{report.created_at}}</span></h5>
+  <h6 class="card-title">Purpose <span class="float-right">{{report.purpose}}</span></h6>
+  <hr>
+  <h6 class="card-title">Sumitted On <span class="float-right">{{report.created_at}}</span></h6>
+    <hr>
+{% if user.role != 'TECHNICIAN'%}
+  <h6 class="card-title">Technician <span class="float-right">{{report.created_by.email}}</span></h6>
+  {% endif %}
    </div>
+
   <div class="card-footer bg-transparent border-success">
 
-  <h5 class="card-title"><strong>Document </strong> <small>
+  <h6 class="card-title"><strong>Document </strong> <small>
 
   {% if report.report_file %}
 
@@ -74,7 +86,7 @@ No File
 
   {% endif %}
 
-   </small></h5>
+   </small></h6>
 
   </div>
 </div>

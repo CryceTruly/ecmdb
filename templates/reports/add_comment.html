@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} | My Reports {% endblock %}
+
+{% load static %}
+
+ {% block content %}
+
+<div class="row mt-4 ml-2">
+<div class="col-md-10">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Reports</a></li>
+    <li class="breadcrumb-item active" aria-current="page">My Reports</li>
+  </ol>
+</nav>
+</div>
+
+<div class="col-md-2">
+<button type="button" class="btn btn-lg btn-outline-success"><a href="{% url 'add_report' %}">Add Report</a></button>
+</div>
+</div>
+     {% include 'partials/_alerts.html'%}
+     <div class="row">
+     <div class="col-md-12">
+     <h4>Add Comment to  <span>Report </span></h4>
+<form>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Comment</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  <button type="submit" class="btn btn-primary mb-2">Confirm Comment</button>
+  </div>
+</form>
+
+     </div>
+
+
+     </div>
+
+
+<script src={% static 'js/all_reports.js' %}>
+
+</script>
+
+{% endblock content %}

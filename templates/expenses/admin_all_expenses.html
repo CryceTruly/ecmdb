@@ -75,7 +75,7 @@
 
 
      <div class="search-output-area">
-     <table class="table table-striped">
+     <table class="table table-hover table-striped table-sm">
         <thead>
           <tr>
             <th scope="col">  Requester</th>
@@ -93,7 +93,7 @@
 
 
     <div class='table-area'>
-<table class="table table-striped">
+<table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
       <th scope="col">Requester</th>
@@ -107,7 +107,7 @@
   <tbody>
 {% for ex in page_obj%}
 
-    <tr>
+    <tr class="text-sm-left small">
       <td>{{ex.requester}}</td>
       <td>{{ex.amount}}</td>
       <td>{{ex.purpose}}</td>
