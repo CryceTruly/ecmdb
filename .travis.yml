@@ -8,9 +8,5 @@ services:
 env:
   - SECRET_KEY='secretstuff'
 
-install:
-  - pipenv shell
-  - pipenv install
-
 script:
   - echo 'hello'
