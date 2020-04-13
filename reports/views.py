@@ -11,6 +11,7 @@ from django.db.models import Q
 from company.models import Company
 from django.core.files.storage import FileSystemStorage
 from reports.models import Comment
+import datetime
 
 
 @login_required(login_url='/accounts/login')
@@ -58,7 +59,7 @@ def index(request):
     paginator = Paginator(reports, 7)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    comments = Comment.objects.all()
+    comments = Comment.objects.all_reports()
     context = {
         'my_reports': reports,
         'page_obj': page_obj,
@@ -70,14 +71,14 @@ def index(request):
 
 @login_required(login_url='/accounts/login')
 def add_report(request):
-    banks = Bank.objects.all()
+    banks = Bank.objects.all_reports()
 
     context = {
         'banks': banks}
     if request.method == 'GET':
         return render(request, 'reports/add_report.html', context)
     if request.method == 'POST':
-        banks = Bank.objects.all()
+        banks = Bank.objects.all_reports()
         has_error = False
         context = {
             'values': request.POST,
@@ -176,7 +177,7 @@ def report_reciept(request, id):
 @login_required(login_url='/accounts/login')
 def report_edit(request, id):
     if request.method == 'GET':
-        banks = Bank.objects.all()
+        banks = Bank.objects.all_reports()
         report = Report.objects.get(id=id)
         context = {
             'values': report,
@@ -187,7 +188,7 @@ def report_edit(request, id):
         has_error = False
         context = {
             'values': request.POST,
-            'banks': Bank.objects.all()
+            'banks': Bank.objects.all_reports()
         }
         owner = request.POST['owner']
         contact = request.POST['contact']
@@ -274,8 +275,10 @@ def report_verified(request, id):
     report = Report.objects.get(id=id)
     if report.paid == True:
         report.paid = False
+        report.verified_at = None
     else:
         report.paid = True
+        report.verified_at = datetime.datetime.now()
     report.save()
     messages.success(
         request, 'Payment verification status updated Successfully')
@@ -309,38 +312,104 @@ def add_report_comments(request, id):
 
 @login_required(login_url='/accounts/login')
 def report_stats(request):
-    today = Report.objects.filter(created_at='2020-03-11')
+    all_reports = Report.objects.filter(paid=True)
+    today = datetime.datetime.today().date()
+    today2 = datetime.date.today()
+    week_ago = today - datetime.timedelta(days=7)
+    month_ago = today - datetime.timedelta(days=30)
+    year_ago = today - datetime.timedelta(days=366)
+    todays_amount = 0
+    todays_count = 0
+    this_week_amount = 0
+    this_week_count = 0
+    this_month_amount = 0
+    this_month_count = 0
+    this_year_amount = 0
+    this_year_count = 0
+
+    for one in all_reports:
+        if one.verified_at.date() == today:
+            todays_amount += one.amount
+            todays_count += 1
+
+        if one.verified_at.date() >= week_ago:
+            this_week_amount += one.amount
+            this_week_count += 1
+
+        if one.verified_at.date() >= month_ago:
+            this_month_amount += one.amount
+            this_month_count += 1
+
+        if one.verified_at.date() >= year_ago:
+            this_year_amount += one.amount
+            this_year_count += 1
+
     context = {
-        'today': 20000,
-        'this_week': 200000,
-        'this_month': 30000,
-        'this_year': 400000000, 'all_time': 400000000000
+        'today': {
+            'amount': todays_amount,
+            "count": todays_count,
+
+        },
+        'this_week': {
+            'amount': this_week_amount,
+            "count": this_week_count,
+
+        },
+        'this_month': {
+            'amount': this_month_amount,
+            "count": this_month_count,
+
+        },
+        'this_year': {
+            'amount': this_year_amount,
+            "count": this_year_count,
+
+        },
+
     }
+
     return render(request, 'reports/stats.html', context)
 
 
 def report_stats_rest(request):
-    months = {
-        "Jan": 30000,
-        "Feb": 40000,
-        "Mar": 50000,
-        "Apr": 40000,
-        "May": 50000,
-        "Jun": 50000,
-        "Jul": 50000,
-        "Aug": 50000,
-        "Sept": 50000,
-        "Nov": 50000,
-        "Dec": 50000
-    }
-    days = {
-        "Mon": 30000,
-        "Tue": 40000,
-        "Wed": 50000,
-        "Thur": 40000,
-        "Fri": 50000,
-        "Sat": 50000,
-        "Sun": 50000,
-    }
-    data = {"months": months, "days": days}
+    all_reports = Report.objects.filter(paid=True)
+    today_month, today_year = datetime.datetime.today(
+    ).month, datetime.datetime.today().year
+    months_data = {}
+    week_days_data = {}
+
+    def get_amount_for_month(month):
+        month_amount = 0
+        for one in all_reports:
+            month_, year = one.verified_at.month, one.verified_at.year
+            if month == month_ and year == today_year:
+                month_amount += one.amount
+        return month_amount
+
+    for x in range(1, 13):
+        today_month, today_year = x, datetime.datetime.today().year
+        for one in all_reports:
+            months_data[x] = get_amount_for_month(x)
+
+    def get_amount_for_day(x, today_day, month, today_year):
+        day_amount = 0
+        for one in all_reports:
+            day_, date_,  month_, year_ = one.verified_at.isoweekday(
+            ), one.verified_at.date().day, one.verified_at.month, one.verified_at.year
+            if x == day_ and month == month_ and year_ == today_year:
+                if not day_ > today_day:
+                    day_amount += one.amount
+        return day_amount
+
+    for x in range(1, 8):
+        today_day, today_month, today_year = datetime.datetime.today(
+        ).isoweekday(), datetime.datetime.today(
+        ).month, datetime.datetime.today().year
+        for one in all_reports:
+            week_days_data[x] = get_amount_for_day(
+                x, today_day, today_month, today_year)
+
+    data = {"months": months_data, "days": week_days_data}
+    return JsonResponse({'data': data}, safe=False)
+
     return JsonResponse({'data': data}, safe=False)

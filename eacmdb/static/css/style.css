@@ -66,3 +66,7 @@
 .login-section {
   margin-top: 10%;
 }
+
+.app-auth {
+  display: none !important;
+}

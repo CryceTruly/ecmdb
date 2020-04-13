@@ -14,6 +14,7 @@ class Expense(models.Model):
     amount = models.FloatField()
     requested_on = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
     submitted_by_name = models.CharField(max_length=255)
     approval_date = models.DateField(auto_now=True)
     status = models.CharField(

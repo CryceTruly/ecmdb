@@ -10,7 +10,26 @@ const getData = async () => {
     Object.values(data.data.days),
   ];
 
-  showChart(labels1, values1, labels2, values2);
+  const letteredLabels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  showChart(
+    letteredLabels,
+    values1,
+    ["Mon", "Tue", "Wed", "Thur", "Fri", "Sar", "Sun"],
+    values2
+  );
 };
 
 getData();

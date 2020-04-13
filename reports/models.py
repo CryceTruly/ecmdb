@@ -30,6 +30,10 @@ class Report(models.Model):
     approved = models.BooleanField(default=False)
     report_file = models.FileField(upload_to='documents')
     paid = models.BooleanField(default=False)
+    verified_at = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.purpose + ' in ' + self.location
 
 
 class Comment(models.Model):

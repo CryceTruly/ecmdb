@@ -108,7 +108,6 @@
       <td>{{ex.requested_on|date:'d/m/Y' }}</td>
   {% if ex.status == 'APPROVED' %}
              <td>
-
              <button type="button" class="btn btn-default btn-sm disabled"
               data-toggle="modal" data-target="#exampleModal1">DISAPPROVE
               <i class="fas icon fa-check-double active"></i></button></td>
@@ -117,47 +116,12 @@
    {% endif %}
     {% if ex.status == 'PENDING' %}  <td> <button type="button" class="btn btn-default btn-sm disabled">PENDING  <i class="fas icon fa-check"></i></button></td>
    {% endif %}
-       <td>
 
 {% if  ex.status == 'PENDING'  %}
+<td>
+ <a type="button" class="btn btn-outline-success btn-sm"  href={%  url 'expense_edit' ex.id %}>Edit</a>
+</td>
 
-
-
-     <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal1">Edit</button>
-     <div>
-<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModal1Label" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModal1" style="color:black">Edit Expense Request</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-body">
-
-            <form action="{%url 'expense_edit' ex.id%}" method="POST" autocomplete="off">
-              {% csrf_token%}
-          <div class="form-group">
-            <label for="amount" class="col-form-label"  style="color:black">Amount (RWF):</label>
-            <input type="number" value={{ex.amount}} name="amount" class="form-control" id="amount" required>
-          </div>
-          <div class="form-group">
-            <label for="purpose"  class="col-form-label" style="color:black">Purpose:</label>
-            <textarea class="form-control"  name="purpose" id="purpose" required>{{ex.purpose}}
-            </textarea>
-          </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-        <input type="submit" class="btn btn-primary" value="Update">
-      </div>
-        </form>
-    </div>
-  </div>
-</div>
 
 
 

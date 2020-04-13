@@ -16,6 +16,10 @@ def login(request):
         password = request.POST['password']
         user = User.objects.filter(email=username, password=password).first()
         if user is not None:
+            if not user.is_active:
+                messages.warning(
+                    request,  'Account disabled, please contact the system administrator')
+                return render(request, "accounts/login.html")
             auth.login(request, user)
             messages.success(request,  'Welcome  ' +
                              user.email+'  you are now logged in')
