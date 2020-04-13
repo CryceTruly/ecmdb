@@ -30,7 +30,7 @@
       <button class="btn btn-outline-success my-2 my-sm-0 search-btn"  type="submit">Search</button>
     </form>
 
-     <div class="search-output-area">
+     <div class="search-output-area table-responsive">
      <table class="table table-hover table-striped table-sm">
         <thead>
           <tr>
@@ -49,7 +49,7 @@
       </table>
 </div>
 
-    <div class="table-area">
+    <div class="table-area table-responsive">
 <table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
@@ -70,6 +70,11 @@
    <td>{{report.location}}</td>
         <td>{{report.amount}}</td>
        <td>{{report.created_by}}</td>
+     {% if user.role == 'BOSS' or user.role == 'TECHNICIAN' %}   <td>
+<span class="badge badge-light"><i class="fa fa-comment" color="red"></i> {{report.comments.count}}</span>
+
+
+</td>{% endif %}
         {% if user.role == 'ACCOUNTANT' %}<td scope="col">
          <a href={% url 'report_verified' report.id%}   {% if report.paid %}  class=  "btn btn-success"
           {% else %} class=  "btn btn-danger"   {% endif %}>

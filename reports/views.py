@@ -59,7 +59,7 @@ def index(request):
     paginator = Paginator(reports, 7)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    comments = Comment.objects.all_reports()
+    comments = Comment.objects.all()
     context = {
         'my_reports': reports,
         'page_obj': page_obj,
@@ -71,14 +71,14 @@ def index(request):
 
 @login_required(login_url='/accounts/login')
 def add_report(request):
-    banks = Bank.objects.all_reports()
+    banks = Bank.objects.all()
 
     context = {
         'banks': banks}
     if request.method == 'GET':
         return render(request, 'reports/add_report.html', context)
     if request.method == 'POST':
-        banks = Bank.objects.all_reports()
+        banks = Bank.objects.all()
         has_error = False
         context = {
             'values': request.POST,
@@ -177,7 +177,7 @@ def report_reciept(request, id):
 @login_required(login_url='/accounts/login')
 def report_edit(request, id):
     if request.method == 'GET':
-        banks = Bank.objects.all_reports()
+        banks = Bank.objects.all()
         report = Report.objects.get(id=id)
         context = {
             'values': report,
@@ -188,7 +188,7 @@ def report_edit(request, id):
         has_error = False
         context = {
             'values': request.POST,
-            'banks': Bank.objects.all_reports()
+            'banks': Bank.objects.all()
         }
         owner = request.POST['owner']
         contact = request.POST['contact']
