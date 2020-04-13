@@ -70,3 +70,21 @@
 .app-auth {
   display: none !important;
 }
+
+@media (max-width: 765px) {
+  .mobile-links {
+    display: flex !important;
+    flex-wrap: wrap;
+  }
+}
+.mobile-up {
+  color: white;
+  padding: 5px 15px;
+  font-size: 15px;
+}
+
+@media (max-width: 500px) {
+  main {
+    padding-top: 150px !important;
+  }
+}

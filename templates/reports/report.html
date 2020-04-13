@@ -17,7 +17,13 @@
 </div>
 
 <div class="col-md-3">
+{% if user.role == 'TECHNICIAN'  %}
 
+<span><a href="{% url 'add_report_comments' report.id %}" type="button" class="btn btn-outline-dark mt-1">Comment<i class="fa fa-comment"></i></a>
+
+</span>
+
+{% endif %}
 {% if user.role == 'ACCOUNTANT'  %}
 <a href="{% url 'make-reciept' report.id %}" type="button" class="btn btn-outline-dark mt-1">RECIEPT<i class="fa fa-print"></i></a>{% endif %}
 

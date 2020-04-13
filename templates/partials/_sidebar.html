@@ -3,9 +3,41 @@
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">EACMDB</a>
        <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-        <a> <span class="pr-3">{{ request.user.email }}</span>
-            <small class="pr-3  text-sm text-monospace">({{ request.user.role }})</small></a>
+
+<span class="mobile-links" style="display:none">
+
+ {% if user.role == 'TECHNICIAN' %}
+            <a  type="submit" class="mobile-up" href="{% url 'reports' %}">My Reports
+            </a>
+             <a>
+            <a type="submit" class="mobile-up" href="{% url 'expenses' %}">
+                 My Expenses
+            </a>
           <a>
+{% endif %}
+ {% if user.role == 'ACCOUNTANT' or  user.role == 'BOSS' %}
+            <a  type="submit" class="mobile-up" href="{% url 'reports' %}">Reports
+            </a>
+
+            <a type="submit" class="mobile-up" href="{% url 'expenses' %}">
+                 Expenses
+            </a>
+ <a  type="submit" class="mobile-up" href="{% url 'report-summary' %}">Report Summary
+            </a>
+
+            <a type="submit" class="mobile-up" href="{% url 'summary' %}">
+                 Expense Summary
+            </a>
+{% endif %}
+
+
+
+</span>
+
+
+            <a> <span class="pr-3">{{ request.user.email }}</span>
+            <small class="pr-3  text-sm text-monospace">({{ request.user.role }})</small></a>
+             <a>
            <form action="{% url 'logout' %}" method="POST" style="display:inline">
             {% csrf_token %}
            <i class="fas icon fa-sign-out-alt"></i>

@@ -73,7 +73,7 @@
       <input class="form-control mr-sm-2" type="search" placeholder="Search"  id="search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0 search-btn" type="submit">Search</button>
     </form>
-         <div class="search-output-area">
+         <div class="search-output-area table-responsive">
      <table class="table table-hover table-striped table-sm">
         <thead>
           <tr>
@@ -89,7 +89,7 @@
       </table>
 </div>
 
-    <div class='table-area'>
+    <div class='table-area table-responsive'>
 <table class="table table-hover table-striped table-sm">
   <thead>
     <tr>
@@ -109,7 +109,7 @@
   {% if ex.status == 'APPROVED' %}
              <td>
              <button type="button" class="btn btn-default btn-sm disabled"
-              data-toggle="modal" data-target="#exampleModal1">DISAPPROVE
+              data-toggle="modal" data-target="#exampleModal1">APPROVED
               <i class="fas icon fa-check-double active"></i></button></td>
         {% endif %}
       {% if ex.status == 'APPROVED' %}  <td> <button type="button" class="btn btn-default btn-sm disabled">APPROVED  <i class="fas icon fa-check-double" style="color:#006699"></i></button></td>
