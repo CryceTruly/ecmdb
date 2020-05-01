@@ -8,6 +8,7 @@ from django.http import JsonResponse
 import json
 import datetime
 import calendar
+from django.contrib import auth
 
 
 @login_required(login_url='/accounts/login')
@@ -35,7 +36,11 @@ def search_expenses(request):
 
 @login_required(login_url='/accounts/login')
 def expenses(request):
-
+    if request.user.role == '':
+        auth.logout(request)
+        messages.warning(
+            request, 'Your role is not authorized to access this area, please login again')
+        return redirect('login')
     if request.user.role == 'TECHNICIAN':
         expenses = Expense.objects.filter(
             requester=request.user).order_by('-updated_at')
