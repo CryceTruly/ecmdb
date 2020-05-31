@@ -3,15 +3,4 @@ from .models import Company
 # Register your models here.
 
 
-# class CompanyAdmin(admin.ModelAdmin):
-
-#     def has_add_permission(self, request):
-#         """Ensure the admin cannot create new Company Instances."""
-#         return True
-
-#     def has_delete_permission(self, request, obj=None):
-#         """Ensure the admin cannot delete the existing Company Instance."""
-#         return True
-
-
-# admin.site.register(Company, CompanyAdmin)
+admin.site.register(Company)
