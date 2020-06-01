@@ -12,7 +12,7 @@ const showResults = (data) => {
   for (let report = 0; report < data.length; report++) {
     resultRows.innerHTML += `
         <tr class="text-sm-left small">
-        <th scope=\"row\">${data[report].plot_no}</th>
+        <th scope=\"row\">${data[report].upi}</th>
      <td>${data[report].owner}</td>
      <td>${data[report].location}</td>
       <td>${data[report].contact}</td>

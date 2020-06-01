@@ -20,7 +20,7 @@ def search_reports(request):
     search_val = json.loads(data).get('data')
 
     if request.user.role in ['BOSS', 'ACCOUNTANT']:
-        reports = Report.objects.filter(plot_no__icontains=search_val) | Report.objects.filter(
+        reports = Report.objects.filter(upi__icontains=search_val) | Report.objects.filter(
             location__startswith=search_val) | Report.objects.filter(
             owner__icontains=search_val) | Report.objects.filter(
             purpose__icontains=search_val) | Report.objects.filter(
@@ -31,7 +31,7 @@ def search_reports(request):
         data = list(reports.values())
         return JsonResponse(data, safe=False)
     if(request.user.role == 'TECHNICIAN'):
-        reports = Report.objects.filter(plot_no__icontains=search_val, created_by=request.user) | Report.objects.filter(
+        reports = Report.objects.filter(upi__icontains=search_val, created_by=request.user) | Report.objects.filter(
             location__startswith=search_val, created_by=request.user) | Report.objects.filter(
             owner__icontains=search_val, created_by=request.user) | Report.objects.filter(
             purpose__icontains=search_val, created_by=request.user) | Report.objects.filter(
@@ -87,7 +87,7 @@ def add_report(request):
         owner = request.POST['owner']
         contact = request.POST['contact']
         location = request.POST['location']
-        plot_no = request.POST['plot_no']
+        upi = request.POST['upi']
         inspection_date = request.POST['inspection_date']
         delivery_date = request.POST['delivery_date']
         amount = request.POST['amount']
@@ -115,7 +115,7 @@ def add_report(request):
             has_error = True
             messages.error(request,  'Location is required')
 
-        if not plot_no:
+        if not upi:
             has_error = True
             messages.error(request,  'Plot Number is required')
         if not inspection_date:
@@ -133,7 +133,7 @@ def add_report(request):
 
         if not has_error:
             num_results = Report.objects.filter(
-                plot_no=request.POST['plot_no'].upper()).count()
+                upi=request.POST['upi'].upper()).count()
             if num_results > 0:
                 has_error = True
                 messages.error(request,  'Report with this plot number Exists')
@@ -147,7 +147,7 @@ def add_report(request):
                                         purpose=purpose,
                                         report_file=report_file,
                                         contact=contact,
-                                        plot_no=plot_no.upper(),
+                                        upi=upi.upper(),
                                         inspection_date=inspection_date,
                                         delivery_date=delivery_date,
                                         report_payed_for=True,
@@ -193,7 +193,7 @@ def report_edit(request, id):
         owner = request.POST['owner']
         contact = request.POST['contact']
         location = request.POST['location']
-        plot_no = request.POST['plot_no']
+        upi = request.POST['upi']
         inspection_date = request.POST['inspection_date']
         delivery_date = request.POST['delivery_date']
         amount = request.POST['amount']
@@ -218,7 +218,7 @@ def report_edit(request, id):
             has_error = True
             messages.error(request,  'Location is required')
 
-        if not plot_no:
+        if not upi:
             has_error = True
             messages.error(request,  'Plot Number is required')
         if not inspection_date:
@@ -244,7 +244,7 @@ def report_edit(request, id):
             report.purpose = purpose
             report.owner = owner
             report.contact = contact
-            report.plot_no = plot_no
+            report.upi = upi
             report.inspection_date = inspection_date
             report.delivery_date = delivery_date
             report.report_payed_for = True
