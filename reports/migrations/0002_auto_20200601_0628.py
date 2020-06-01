@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RenameField(
             model_name='report',
-            old_name='upi',
+            old_name='plot_no',
             new_name='upi',
         ),
         migrations.AlterField(
