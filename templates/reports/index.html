@@ -97,7 +97,9 @@
 </div>
 {% endif %}
 
-  <div class="container  container-pagination ">
+  {% if my_reports.count %}
+
+   <div class="container  container-pagination ">
 <span class="current">
        Showing     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
@@ -111,11 +113,10 @@
           <li class="page-item">   <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
            <li class="page-item">    <a   class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages}} &raquo;</a></li>
         {% endif %}
-
-
 </ul>
-
      </div>
+
+     {% endif %}
 
      </div>
 <script src={% static 'js/all_reports.js' %}>
