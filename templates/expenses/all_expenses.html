@@ -119,10 +119,6 @@
         {% endif %}
          {% if ex.status == 'APPROVED' %}
              <td>
-                <form action="{% url 'approve_expense' ex.id %}" method="POST">
-            {% csrf_token %}
-            <input type="submit" class="btn btn-danger btn-sm" value='DISAPPROVE'>
-            </form>
             </td>
         {% endif %}
 
