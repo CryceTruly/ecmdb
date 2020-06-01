@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                     'EXPROPRIATION', 'EXPROPRIATION'), ('EVALUATION', 'EVALUATION')], max_length=100)),
                 ('inspection_date', models.CharField(max_length=255)),
                 ('contact', models.CharField(max_length=255)),
-                ('upi', models.CharField(max_length=255, unique=True)),
+                ('plot_no', models.CharField(max_length=255, unique=True)),
                 ('report_payed_for', models.BooleanField(default=False)),
                 ('reason_for_not_paying', models.TextField()),
                 ('delivery_date', models.CharField(max_length=255)),
