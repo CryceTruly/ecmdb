@@ -90,7 +90,7 @@ def add_report(request):
         upi = request.POST['upi']
         inspection_date = request.POST['inspection_date']
         delivery_date = request.POST['delivery_date']
-        amount = request.POST['amount']
+        amount = request.POST['amount'] if request.POST['amount'] else 0
         purpose = request.POST['purpose']
         bank = request.POST['bank']
         report_file = request.FILES and request.FILES['report_file']
@@ -103,30 +103,20 @@ def add_report(request):
         if not purpose:
             messages.error(request,  'Purpose is required')
             has_error = True
-
-        if not contact:
-            has_error = True
-            messages.error(request,  'Owner Contact is required')
         if contact and len(contact) is not 10:
             has_error = True
             messages.error(
                 request,  'The Contact phone should be  10 characters')
-        if not location:
-            has_error = True
-            messages.error(request,  'Location is required')
 
         if not upi:
             has_error = True
-            messages.error(request,  'Plot Number is required')
+            messages.error(request,  'UPI is required')
         if not inspection_date:
             has_error = True
             messages.error(request,  'Inspection Date is required')
         if not delivery_date:
             has_error = True
             messages.error(request,  'Delivery Date  is required')
-        if not amount:
-            has_error = True
-            messages.error(request,  'Amount Paid is required')
         if not bank:
             has_error = True
             messages.error(request,  'Client Bank is required')
@@ -136,7 +126,7 @@ def add_report(request):
                 upi=request.POST['upi'].upper()).count()
             if num_results > 0:
                 has_error = True
-                messages.error(request,  'Report with this plot number Exists')
+                messages.error(request,  'Report with this UPI Exists')
                 return render(request, 'reports/add_report.html', context)
         if not has_error:
             rep = Report.objects.create(created_by=request.user,
@@ -206,21 +196,14 @@ def report_edit(request, id):
         if not purpose:
             messages.error(request,  'Purpose is required')
             has_error = True
-
-        if not contact:
-            has_error = True
-            messages.error(request,  'Owner Contact is required')
         if contact and len(contact) is not 10:
             has_error = True
             messages.error(
                 request,  'The Contact phone should be  10 characters')
-        if not location:
-            has_error = True
-            messages.error(request,  'Location is required')
 
         if not upi:
             has_error = True
-            messages.error(request,  'Plot Number is required')
+            messages.error(request,  'UPI is required')
         if not inspection_date:
             has_error = True
             messages.error(request,  'Inspection Date is required')
@@ -228,8 +211,7 @@ def report_edit(request, id):
             has_error = True
             messages.error(request,  'Delivery Date  is required')
         if not amount:
-            has_error = True
-            messages.error(request,  'Amount Paid is required')
+            amount = 0
         if not bank:
             has_error = True
             messages.error(request,  'Client Bank is required')
