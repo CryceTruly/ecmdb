@@ -214,9 +214,10 @@ def expense_summary_rest(request):
     def get_amount_for_month(month):
         month_amount = 0
         for one in all_expenses:
-            month_, year = one.approved_at.month, one.approved_at.year
-            if month == month_ and year == today_year:
-                month_amount += one.amount
+            if one.approved_at is not None:
+                month_, year = one.approved_at.month, one.approved_at.year
+                if month == month_ and year == today_year:
+                    month_amount += one.amount
         return month_amount
 
     for x in range(1, 13):
