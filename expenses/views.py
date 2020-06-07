@@ -227,11 +227,12 @@ def expense_summary_rest(request):
     def get_amount_for_day(x, today_day, month, today_year):
         day_amount = 0
         for one in all_expenses:
-            day_, date_,  month_, year_ = one.approved_at.isoweekday(
-            ), one.approved_at.date().day, one.approved_at.month, one.approved_at.year
-            if x == day_ and month == month_ and year_ == today_year:
-                if not day_ > today_day:
-                    day_amount += one.amount
+            if one.approved_at is not None:
+                day_, date_,  month_, year_ = one.approved_at.isoweekday(
+                ), one.approved_at.date().day, one.approved_at.month, one.approved_at.year
+                if x == day_ and month == month_ and year_ == today_year:
+                    if not day_ > today_day:
+                        day_amount += one.amount
         return day_amount
 
     for x in range(1, 8):
