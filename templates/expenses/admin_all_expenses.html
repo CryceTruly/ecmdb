@@ -64,7 +64,10 @@
 {% if not expenses.count %}
 <div class="my-1 p-5">
 <h3>No Expenses </h3>
+
+{%  if not request.user.role == 'BOSS' %}
 <a href="{% url 'expenses_add' %}">Add One</a>
+{% endif %}
 </div>
 
 {% else %}
