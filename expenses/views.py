@@ -161,21 +161,22 @@ def expense_summary(request):
     this_year_count = 0
 
     for one in all_expenses:
-        if one.approved_at.date() == today:
-            todays_amount += one.amount
-            todays_count += 1
+        if one.approved_at is not None:
+            if one.approved_at.date() == today:
+                todays_amount += one.amount
+                todays_count += 1
 
-        if one.approved_at.date() >= week_ago:
-            this_week_amount += one.amount
-            this_week_count += 1
+            if one.approved_at.date() >= week_ago:
+                this_week_amount += one.amount
+                this_week_count += 1
 
-        if one.approved_at.date() >= month_ago:
-            this_month_amount += one.amount
-            this_month_count += 1
+            if one.approved_at.date() >= month_ago:
+                this_month_amount += one.amount
+                this_month_count += 1
 
-        if one.approved_at.date() >= year_ago:
-            this_year_amount += one.amount
-            this_year_count += 1
+            if one.approved_at.date() >= year_ago:
+                this_year_amount += one.amount
+                this_year_count += 1
 
     context = {
         'today': {
