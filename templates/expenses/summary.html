@@ -23,7 +23,7 @@
 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
   <div class="card-header">TODAY <h5 class="float-right"><span class="badge  badge-light ">{{today.count}}</span></h5> </div>
   <div class="card-body" style="display:flex;align-items:center">
-    <i class="fa fa-money-bill-alt"></i>
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{today.amount}} RWF</p>  </div>
      <a href="{% url 'todays-expense-export' today_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
 </div>
@@ -32,7 +32,7 @@
 <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
   <div class="card-header">THIS WEEK <h5 class="float-right"><span class="badge  badge-light ">{{this_week.count}} </span></h5> </div>
   <div class="card-body" style="display:flex;align-items:center">
-    <i class="fa fa-money-bill-alt"></i>
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_week.amount}} RWF</p>  </div>
      <a href="{% url 'todays-expense-export' this_week_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
 
@@ -42,7 +42,7 @@
 <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
   <div class="card-header">THIS MONTH <h5 class="float-right"><span class="badge  badge-light ">{{this_month.count}}</span></h5> </div>
   <div class="card-body" style="display:flex;align-items:center">
-    <i class="fa fa-money-bill-alt"></i>
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_month.amount}} RWF</p>
   </div>
    <a href="{% url 'todays-expense-export' this_months_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
@@ -53,7 +53,7 @@
 <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
   <div class="card-header">THIS YEAR <h5 class="float-right"><span class="badge  badge-light ">{{this_year.count}}</span></h5> </div>
   <div class="card-body" style="display:flex;align-items:center">
-    <i class="fa fa-money-bill-alt"></i>
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_year.amount}} RWF</p>  </div>
      <a href="{% url 'todays-expense-export' this_year_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
 
