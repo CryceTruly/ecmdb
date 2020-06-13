@@ -161,15 +161,22 @@ def expense_summary(request):
     this_year_amount = 0
     this_year_count = 0
 
+    start_date = datetime.datetime.today(
+    ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
+
+    expenses = Expense.objects.filter(
+        status='APPROVED', approval_date__gte=start_date.date())
+
+    for one in expenses:
+        if one.approval_date is not None:
+            this_week_amount += one.amount
+            this_week_count += 1
+
     for one in all_expenses:
         if one.approval_date is not None:
             if one.approval_date == today:
                 todays_amount += one.amount
                 todays_count += 1
-
-            if one.approval_date >= week_ago:
-                this_week_amount += one.amount
-                this_week_count += 1
 
             if one.approval_date >= month_ago:
                 this_month_amount += one.amount
@@ -280,12 +287,9 @@ def approve_expense(request, id):
 
 
 def get_expense_query_set(period):
-    print(period)
     today = datetime.date.today()
     if period == 'today_expenses':
         expenses = Expense.objects.filter(approval_date=today)
-        import pdb
-        pdb.set_trace()
         return expenses
     elif period == 'this_months_expenses':
         months_first_day = datetime.datetime.today().date().replace(day=1)
@@ -294,6 +298,7 @@ def get_expense_query_set(period):
     elif period == 'this_week_expenses':
         start_date = datetime.datetime.today(
         ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
+
         expenses = Expense.objects.filter(
             status='APPROVED', approval_date__gte=start_date.date())
         return expenses
@@ -301,7 +306,6 @@ def get_expense_query_set(period):
     elif period == 'this_year_expenses':
         start_date = starting_day_of_current_year = datetime.datetime.now(
         ).date().replace(month=1, day=1)
-        print(start_date)
         expenses = Expense.objects.filter(
             status='APPROVED', approval_date__gte=start_date)
         return expenses
