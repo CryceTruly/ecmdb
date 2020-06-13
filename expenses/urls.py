@@ -13,7 +13,6 @@ urlpatterns = [
     path('expenses/search_expenses', views.search_expenses, name='search_expenses'),
     path('expenses/summary_rest', views.expense_summary_rest,
          name='expenses_summary_rest'),
-
     path('expenses/todays-expense-export/<period>',
          views.today_expense_export, name='todays-expense-export')
 ]
