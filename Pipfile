@@ -18,6 +18,7 @@ django-filter = "*"
 whitenoise = "*"
 boto3 = "*"
 django-storages = "*"
+xlwt = "*"
 
 [requires]
 python_version = "3.7"
