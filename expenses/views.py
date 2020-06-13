@@ -4,11 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .filters import ExpenseFilter
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import json
 import datetime
 import calendar
 from django.contrib import auth
+import xlwt
 
 
 @login_required(login_url='/accounts/login')
@@ -161,21 +162,22 @@ def expense_summary(request):
     this_year_count = 0
 
     for one in all_expenses:
-        if one.approved_at.date() == today:
-            todays_amount += one.amount
-            todays_count += 1
+        if one.approval_date is not None:
+            if one.approval_date == today:
+                todays_amount += one.amount
+                todays_count += 1
 
-        if one.approved_at.date() >= week_ago:
-            this_week_amount += one.amount
-            this_week_count += 1
+            if one.approval_date >= week_ago:
+                this_week_amount += one.amount
+                this_week_count += 1
 
-        if one.approved_at.date() >= month_ago:
-            this_month_amount += one.amount
-            this_month_count += 1
+            if one.approval_date >= month_ago:
+                this_month_amount += one.amount
+                this_month_count += 1
 
-        if one.approved_at.date() >= year_ago:
-            this_year_amount += one.amount
-            this_year_count += 1
+            if one.approval_date >= year_ago:
+                this_year_amount += one.amount
+                this_year_count += 1
 
     context = {
         'today': {
@@ -198,6 +200,11 @@ def expense_summary(request):
             "count": this_year_count,
 
         },
+        'today_expenses': 'today_expenses',
+        'this_week_expenses': 'this_week_expenses',
+        'this_year_expenses': 'this_year_expenses',
+        'this_months_expenses': 'this_months_expenses'
+
 
     }
     return render(request, 'expenses/summary.html', context)
@@ -213,9 +220,10 @@ def expense_summary_rest(request):
     def get_amount_for_month(month):
         month_amount = 0
         for one in all_expenses:
-            month_, year = one.approved_at.month, one.approved_at.year
-            if month == month_ and year == today_year:
-                month_amount += one.amount
+            if one.approval_date is not None:
+                month_, year = one.approval_date.month, one.approval_date.year
+                if month == month_ and year == today_year:
+                    month_amount += one.amount
         return month_amount
 
     for x in range(1, 13):
@@ -226,11 +234,12 @@ def expense_summary_rest(request):
     def get_amount_for_day(x, today_day, month, today_year):
         day_amount = 0
         for one in all_expenses:
-            day_, date_,  month_, year_ = one.approved_at.isoweekday(
-            ), one.approved_at.date().day, one.approved_at.month, one.approved_at.year
-            if x == day_ and month == month_ and year_ == today_year:
-                if not day_ > today_day:
-                    day_amount += one.amount
+            if one.approved_at is not None:
+                day_, date_,  month_, year_ = one.approved_at.isoweekday(
+                ), one.approved_at.date().day, one.approved_at.month, one.approved_at.year
+                if x == day_ and month == month_ and year_ == today_year:
+                    if not day_ > today_day:
+                        day_amount += one.amount
         return day_amount
 
     for x in range(1, 8):
@@ -263,7 +272,65 @@ def approve_expense(request, id):
     else:
         expense.status = 'APPROVED'
         expense.approved_at = datetime.datetime.now()
+        expense.approval_date = datetime.datetime.today().date()
 
     expense.save()
     messages.success(request, 'Expense  status updated')
     return redirect('expenses')
+
+
+def get_expense_query_set(period):
+    print(period)
+    today = datetime.date.today()
+    if period == 'today_expenses':
+        expenses = Expense.objects.filter(approval_date=today)
+        import pdb
+        pdb.set_trace()
+        return expenses
+    elif period == 'this_months_expenses':
+        months_first_day = datetime.datetime.today().date().replace(day=1)
+        return Expense.objects.filter(status='APPROVED', approval_date__gte=months_first_day)
+
+    elif period == 'this_week_expenses':
+        start_date = datetime.datetime.today(
+        ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
+        expenses = Expense.objects.filter(
+            status='APPROVED', approval_date__gte=start_date.date())
+        return expenses
+
+    elif period == 'this_year_expenses':
+        start_date = starting_day_of_current_year = datetime.datetime.now(
+        ).date().replace(month=1, day=1)
+        print(start_date)
+        expenses = Expense.objects.filter(
+            status='APPROVED', approval_date__gte=start_date)
+        return expenses
+
+
+def today_expense_export(request, period):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="expenses"' + \
+        period+'expenses'+str(datetime.datetime.today()) + '.xls'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Expenses')
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Requester', 'amount', 'purpose', 'status', 'approval_date']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    font_style = xlwt.XFStyle()
+    rows = get_expense_query_set(period=period).values_list('submitted_by_name', 'amount',
+                                                            'purpose', 'status', 'approval_date')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+    wb.save(response)
+    return response
