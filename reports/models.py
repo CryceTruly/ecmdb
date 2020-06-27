@@ -28,9 +28,12 @@ class Report(models.Model):
     updated_at = models.DateField(auto_now=True)
     created_at = models.DateField(auto_now_add=True)
     approved = models.BooleanField(default=False)
+    approval_date = models.DateField(null=True)
+
     report_file = models.FileField(upload_to='documents')
     paid = models.BooleanField(default=False)
     verified_at = models.DateTimeField(null=True)
+    approved_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.purpose + ' in ' + self.location

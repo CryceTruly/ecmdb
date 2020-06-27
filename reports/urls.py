@@ -18,5 +18,8 @@ urlpatterns = [
     path('report-summary-rest', views.report_stats_rest,
          name='reports-summary-rest'),
     path('add_report_comments/<int:id>',
-         views.add_report_comments, name='add_report_comments')
+         views.add_report_comments, name='add_report_comments'),
+
+    path('reports/report-export/<period>/<total>',
+         views.report_export, name='report-export')
 ]

@@ -22,34 +22,48 @@
 <div class="col-md-3">
 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
   <div class="card-header">TODAY <h5 class="float-right"><span class="badge  badge-light ">{{today.count}} </span></h5></div>
-  <div class="card-body">
-    <i class="fa fa-money-bill-alt"></i>
-    <p class="card-text">{{today.amount}} RWF</p>  </div>
+  <div class="card-body" style="display:flex;align-items:center">
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
+    <p class="card-text">{{today.amount}} RWF</p></div>
+
+    {% if  today.count > 0 %}  <a href="{% url 'report-export' today_reports today.amount  %}" class="btn btn-secondary">VIEW PDF</a>{% endif %}
+    {% if  today.count < 1 %}  <a href="{% url 'report-export' today_reports today.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
+
 </div>
 </div>
 <div class="col-md-3">
 <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
   <div class="card-header">THIS WEEK <h5 class="float-right"><span class="badge  badge-light ">{{this_week.count}} </span></h5></div>
-  <div class="card-body">
-    <i class="fa fa-money-bill-alt"></i>
+  <div class="card-body" style="display:flex;align-items:center">
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_week.amount}} RWF</p>  </div>
+
+    {% if  this_week.count > 0 %}  <a href="{% url 'report-export' this_week_reports this_week.amount  %}" class="btn btn-secondary">VIEW PDF</a>{% endif %}
+    {% if  this_week.count < 1 %}  <a href="{% url 'report-export' this_week_reports this_week.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
+
 </div>
 </div>
 <div class="col-md-3">
 <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
   <div class="card-header">THIS MONTH <h5 class="float-right"><span class="badge  badge-light ">{{this_month.count}}</span></h5></div>
-  <div class="card-body">
-    <i class="fa fa-money-bill-alt"></i>
+  <div class="card-body" style="display:flex;align-items:center">
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_month.amount}} RWF</p>
   </div>
+  {% if  this_month.count > 0 %}  <a href="{% url 'report-export' this_months_reports this_month.amount  %}" class="btn btn-secondary">VIEW PDF</a>{% endif %}
+  {% if  this_month.count < 1 %}  <a href="{% url 'report-export' this_months_reports this_month.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
+
 </div>
 </div>
 <div class="col-md-3">
 <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
   <div class="card-header">THIS YEAR <h5 class="float-right"><span class="badge  badge-light ">{{this_year.count}}</span></h5></div>
-  <div class="card-body">
-    <i class="fa fa-money-bill-alt"></i>
+  <div class="card-body" style="display:flex;align-items:center">
+    <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_year.amount}} RWF</p>  </div>
+    {% if  this_year.count > 0 %}  <a href="{% url 'report-export' this_year_reports this_year.amount  %}" class="btn btn-secondary">VIEW PDF</a>{% endif %}
+    {% if  this_year.count < 1 %}  <a href="{% url 'report-export' this_year_reports this_year.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
+
 </div>
 </div>
 
