@@ -11,6 +11,11 @@ import calendar
 from django.contrib import auth
 import xlwt
 
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.contrib.sites.shortcuts import get_current_site
+
 
 @login_required(login_url='/accounts/login')
 def search_expenses(request):
@@ -190,29 +195,23 @@ def expense_summary(request):
         'today': {
             'amount': todays_amount,
             "count": todays_count,
-
         },
         'this_week': {
             'amount': this_week_amount,
             "count": this_week_count,
-
         },
         'this_month': {
             'amount': this_month_amount,
             "count": this_month_count,
-
         },
         'this_year': {
             'amount': this_year_amount,
             "count": this_year_count,
-
         },
         'today_expenses': 'today_expenses',
         'this_week_expenses': 'this_week_expenses',
         'this_year_expenses': 'this_year_expenses',
         'this_months_expenses': 'this_months_expenses'
-
-
     }
     return render(request, 'expenses/summary.html', context)
 
@@ -311,30 +310,39 @@ def get_expense_query_set(period):
         return expenses
 
 
-def today_expense_export(request, period):
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="expenses"' + \
-        period+'expenses'+str(datetime.datetime.today()) + '.xls'
+def today_expense_export(request, period, total):
 
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('Expenses')
-    row_num = 0
+    options = {'today_expenses': 'TODAYS EXPENSES',
+               'this_week_expenses': 'THIS WEEK EXPENSES ',
+               'this_year_expenses': 'THIS YEAR EXPENSES',
+               'this_months_expenses': 'THIS MONTH EXPENSES'}
 
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+    rows = get_expense_query_set(period=period)
 
-    columns = ['Requester', 'amount', 'purpose', 'status', 'approval_date']
+    return generate_pdf(rows, request, period, total, options[period])
 
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
 
-    font_style = xlwt.XFStyle()
-    rows = get_expense_query_set(period=period).values_list('submitted_by_name', 'amount',
-                                                            'purpose', 'status', 'approval_date')
-    for row in rows:
-        row_num += 1
-        for col_num in range(len(row)):
-            ws.write(row_num, col_num, str(row[col_num]), font_style)
+def generate_pdf(queryset, request, period, total, title):
+    """Generate pdf."""
 
-    wb.save(response)
+    # Rendered
+    html_string = render_to_string(
+        'expenses/pdf-output.html', {'expenses': queryset,
+                                     'period': period,
+                                     'total': total,
+                                     'title': title,
+                                     'current_site': get_current_site(request).domain})
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+    # Creating http response
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
     return response

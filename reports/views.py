@@ -13,6 +13,14 @@ from django.core.files.storage import FileSystemStorage
 from reports.models import Comment
 import datetime
 
+from django.http import JsonResponse, HttpResponse
+
+
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.contrib.sites.shortcuts import get_current_site
+
 
 @login_required(login_url='/accounts/login')
 def search_reports(request):
@@ -245,8 +253,12 @@ def report_approve(request, id):
     report = Report.objects.get(id=id)
     if report.approved == True:
         report.approved = False
+        report.approved_at = datetime.datetime.now()
+        report.approval_date = None
     else:
         report.approved = True
+        report.approved_at = datetime.datetime.now()
+        report.approval_date = datetime.date.today()
     report.save()
     messages.success(request, 'Report status updated Successfully')
     return redirect('report', id)
@@ -261,6 +273,7 @@ def report_verified(request, id):
     else:
         report.paid = True
         report.verified_at = datetime.datetime.now()
+
     report.save()
     messages.success(
         request, 'Payment verification status updated Successfully')
@@ -294,7 +307,7 @@ def add_report_comments(request, id):
 
 @login_required(login_url='/accounts/login')
 def report_stats(request):
-    all_reports = Report.objects.filter(paid=True)
+    all_reports = Report.objects.filter(approved=True)
     today = datetime.datetime.today().date()
     today2 = datetime.date.today()
     week_ago = today - datetime.timedelta(days=7)
@@ -309,22 +322,39 @@ def report_stats(request):
     this_year_amount = 0
     this_year_count = 0
 
-    for one in all_reports:
-        if one.verified_at.date() == today:
-            todays_amount += one.amount
-            todays_count += 1
+    todays_reports = Report.objects.filter(
+        approved=True,  approval_date=datetime.date.today())
 
-        if one.verified_at.date() >= week_ago:
-            this_week_amount += one.amount
-            this_week_count += 1
+    for td in todays_reports:
+        todays_amount += td.amount
+        todays_count += 1
 
-        if one.verified_at.date() >= month_ago:
-            this_month_amount += one.amount
-            this_month_count += 1
+    start_date = datetime.datetime.today(
+    ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
 
-        if one.verified_at.date() >= year_ago:
-            this_year_amount += one.amount
-            this_year_count += 1
+    this_week_reports = Report.objects.filter(
+        approved=True, approval_date__gte=start_date.date())
+
+    for td in this_week_reports:
+        this_week_amount += td.amount
+        this_week_count += 1
+
+    months_first_day = datetime.datetime.today().date().replace(day=1)
+    this_month_reports = Report.objects.filter(
+        approved=True, approval_date__gte=months_first_day)
+
+    for td in this_month_reports:
+        this_month_amount += td.amount
+        this_month_count += 1
+
+    start_date = starting_day_of_current_year = datetime.datetime.now(
+    ).date().replace(month=1, day=1)
+    this_year_reports = Report.objects.filter(
+        approved=True, approval_date__gte=start_date)
+
+    for one in this_year_reports:
+        this_year_amount += one.amount
+        this_year_count += 1
 
     context = {
         'today': {
@@ -348,13 +378,18 @@ def report_stats(request):
 
         },
 
+        'today_reports': 'today_reports',
+        'this_week_reports': 'this_week_reports',
+        'this_year_reports': 'this_year_reports',
+        'this_months_reports': 'this_months_reports'
+
     }
 
     return render(request, 'reports/stats.html', context)
 
 
 def report_stats_rest(request):
-    all_reports = Report.objects.filter(paid=True)
+    all_reports = Report.objects.filter(approved=True)
     today_month, today_year = datetime.datetime.today(
     ).month, datetime.datetime.today().year
     months_data = {}
@@ -363,7 +398,7 @@ def report_stats_rest(request):
     def get_amount_for_month(month):
         month_amount = 0
         for one in all_reports:
-            month_, year = one.verified_at.month, one.verified_at.year
+            month_, year = one.approved_at.month, one.approved_at.year
             if month == month_ and year == today_year:
                 month_amount += one.amount
         return month_amount
@@ -376,8 +411,8 @@ def report_stats_rest(request):
     def get_amount_for_day(x, today_day, month, today_year):
         day_amount = 0
         for one in all_reports:
-            day_, date_,  month_, year_ = one.verified_at.isoweekday(
-            ), one.verified_at.date().day, one.verified_at.month, one.verified_at.year
+            day_, date_,  month_, year_ = one.approved_at.isoweekday(
+            ), one.approved_at.date().day, one.approved_at.month, one.approved_at.year
             if x == day_ and month == month_ and year_ == today_year:
                 if not day_ > today_day:
                     day_amount += one.amount
@@ -395,3 +430,65 @@ def report_stats_rest(request):
     return JsonResponse({'data': data}, safe=False)
 
     return JsonResponse({'data': data}, safe=False)
+
+
+def get_income_query_set(period):
+    today = datetime.date.today()
+    if period == 'today_reports':
+        reports = Report.objects.filter(approval_date=today)
+        return reports
+    elif period == 'this_months_reports':
+        months_first_day = datetime.datetime.today().date().replace(day=1)
+        return Report.objects.filter(approved=True, approval_date__gte=months_first_day)
+
+    elif period == 'this_week_reports':
+        start_date = datetime.datetime.today(
+        ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
+
+        reports = Report.objects.filter(
+            approved=True, approval_date__gte=start_date.date())
+        return reports
+
+    elif period == 'this_year_reports':
+        start_date = starting_day_of_current_year = datetime.datetime.now(
+        ).date().replace(month=1, day=1)
+        reports = Report.objects.filter(
+            approved=True, approval_date__gte=start_date)
+        return reports
+
+
+def generate_pdf(queryset, request, period, total, title):
+    """Generate pdf."""
+
+    # Rendered
+    html_string = render_to_string(
+        'reports/pdf-output.html', {'reports': queryset,
+                                    'period': period,
+                                    'total': total,
+                                    'title': title,
+                                    'current_site': get_current_site(request).domain})
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+    # Creating http response
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
+    return response
+
+
+def report_export(request, period, total):
+
+    options = {'today_reports': ' REPORTS  TODAY',
+               'this_week_reports': 'REPORTS THIS WEEK',
+               'this_year_reports': 'REPORTS THIS YEAR',
+               'this_months_reports': 'REPORTS THIS MONTH'}
+
+    rows = get_income_query_set(period=period)
+    return generate_pdf(rows, request, period, total, options[period])

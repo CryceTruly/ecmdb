@@ -25,7 +25,8 @@
   <div class="card-body" style="display:flex;align-items:center">
     <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{today.amount}} RWF</p>  </div>
-     <a href="{% url 'todays-expense-export' today_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
+   {% if  today.count > 0 %}  <a href="{% url 'todays-expense-export' today_expenses today.amount %}" class="btn btn-secondary">VIEW PDF</a>    {% endif %}
+   {% if  today.count < 1 %}  <a href="{% url 'todays-expense-export' today_expenses today.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>    {% endif %}
 </div>
 </div>
 <div class="col-md-3">
@@ -34,7 +35,8 @@
   <div class="card-body" style="display:flex;align-items:center">
     <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_week.amount}} RWF</p>  </div>
-     <a href="{% url 'todays-expense-export' this_week_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
+    {% if  this_week.count > 0 %}  <a href="{% url 'todays-expense-export' this_week_expenses this_week.amount %}" class="btn btn-secondary">VIEW PDF</a>{% endif %}
+    {% if  this_week.count < 1 %}  <a href="{% url 'todays-expense-export' this_week_expenses this_week.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
 
 </div>
 </div>
@@ -45,8 +47,10 @@
     <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_month.amount}} RWF</p>
   </div>
-   <a href="{% url 'todays-expense-export' this_months_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
 
+   {% if  this_month.count > 0 %}  <a href="{% url 'todays-expense-export' this_months_expenses this_month.amount %}" class="btn btn-secondary">VIEW PDF</a>
+   {% endif %}
+   {% if  this_month.count < 1 %}  <a href="{% url 'todays-expense-export' this_month_expenses this_month.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
 </div>
 </div>
 <div class="col-md-3">
@@ -55,7 +59,12 @@
   <div class="card-body" style="display:flex;align-items:center">
     <i class="fa fa-money-bill-alt"></i> &nbsp; &nbsp;
     <p class="card-text">{{this_year.amount}} RWF</p>  </div>
-     <a href="{% url 'todays-expense-export' this_year_expenses %}" class="btn btn-secondary">EXPORT EXCEL</a>
+
+
+   {% if  this_year.count > 0 %} <a href="{% url 'todays-expense-export' this_year_expenses this_year.amount %}" class="btn btn-secondary">VIEW PDF</a>
+
+   {% endif %}
+   {% if  this_year.count < 1 %}  <a href="{% url 'todays-expense-export' this_year_expenses this_year.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
 
 </div>
 </div>

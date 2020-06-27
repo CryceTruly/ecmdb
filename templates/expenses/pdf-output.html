@@ -1,0 +1,113 @@
+{% load static %}
+{% load i18n %}
+
+<html>
+  <head>
+    <title>PDF Output</title>
+<style>
+     #customers {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  padding: 8px;
+}
+
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+}
+h4{
+  text-align: center;
+  text-decoration: underline;
+}
+
+      @page {
+        size: "A4";
+        margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+        @bottom-center {
+          background: "{% static 'img/logo.png' %}"
+            no-repeat center top;
+          background-size: auto 1.5cm;
+          padding-top: 1.8cm;
+          font: 10pt "Playfair Display";
+          text-align: center;
+          vertical-align: top;
+        }
+
+        @top-center {
+          content: "EAST AFRICA PROPERTY CONSULTANTS MORTGAGE DB SYSTEM";
+        }
+        @bottom-right {
+          content: "Page " counter(page) " of " counter(pages);
+        }
+      }
+        footer {
+    position: fixed;
+    bottom: -2.5cm;
+    width: 100%;
+    text-align: center;
+    font-size: 10pt;
+}
+footer img {
+    height: 1.5cm;
+}
+</style>
+<footer>
+    {% with website_url="" %}
+        {% blocktrans %}Downloaded via <a href="" class="nav-link">{{current_site}}</a>{% endblocktrans %} at {% now "H:i jS F Y " %}
+    {% endwith %}
+</footer>
+
+    </style>
+
+  </head>
+  <body>
+    <div class="page-head">
+      <div class="left">
+      </div>
+    </div>
+
+    <h4> {{title}}</h4>
+    <div class='table-area table-responsive'>
+      <table class="table table-hover table-striped table-sm" id="customers">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Requester</th>
+            <th scope="col">Amount (RWF)</th>
+            <th scope="col">Purpose</th>
+            <th scope="col">Status</th>
+            <th scope="col">Date</th>
+
+          </tr>
+        </thead>
+        <tbody>
+      {% for ex in expenses%}
+          <tr class="text-sm-left small">
+            <td>{{forloop.counter}}</td>
+            <td>{{ex.requester}}</td>
+            <td>{{ex.amount}}</td>
+            <td>{{ex.purpose}}</td>
+        {% if ex.status == 'PENDING' %}<td class="text-default">{{ex.status}}</td>{% endif %}
+        {% if ex.status == 'APPROVED' %}<td class="text-success">{{ex.status}}</td>{% endif %}
+            <td>{{ex.requested_on |date:"d M Y" }}</td>
+          </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="2">Total</td>
+        <td colspan="2">{{total}}</td>
+      </tr>
+
+        </tbody>
+      </table>
+
+      </div>
+
+  </body>
+</html>

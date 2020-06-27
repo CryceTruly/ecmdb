@@ -53,8 +53,12 @@ const showChart = (labels1, values1, labels2, values2) => {
       ],
     },
 
-    // Configuration options go here
-    options: {},
+    options: {
+      title: {
+        display: true,
+        text: "Approved Report Amount Distribution",
+      },
+    },
   });
 
   var ctx1 = document.getElementById("myChartOne").getContext("2d");
@@ -76,6 +80,11 @@ const showChart = (labels1, values1, labels2, values2) => {
     },
 
     // Configuration options go here
-    options: {},
+    options: {
+      title: {
+        display: true,
+        text: "Approved Report Amount Distribution",
+      },
+    },
   });
 };

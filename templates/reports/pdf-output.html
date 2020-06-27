@@ -1,0 +1,122 @@
+{% load static %}
+{% load i18n %}
+
+<html>
+  <head>
+    <title>PDF Output</title>
+<style>
+     #customers {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  padding: 8px;
+}
+
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+}
+h4{
+  text-align: center;
+  text-decoration: underline;
+}
+
+      @page {
+        size: "A4";
+        margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+        @bottom-center {
+          background: "{% static 'img/logo.png' %}"
+            no-repeat center top;
+          background-size: auto 1.5cm;
+          padding-top: 1.8cm;
+          font: 10pt "Playfair Display";
+          text-align: center;
+          vertical-align: top;
+        }
+
+        @top-center {
+          content: "EAST AFRICA PROPERTY CONSULTANTS MORTGAGE DB SYSTEM";
+        }
+        @bottom-right {
+          content: "Page " counter(page) " of " counter(pages);
+        }
+      }
+        footer {
+    position: fixed;
+    bottom: -2.5cm;
+    width: 100%;
+    text-align: center;
+    font-size: 10pt;
+}
+footer img {
+    height: 1.5cm;
+}
+</style>
+<footer>
+    {% with website_url="" %}
+        {% blocktrans %}Downloaded via <a href="" class="nav-link">{{current_site}}</a>{% endblocktrans %} at {% now "H:i jS F Y " %}
+    {% endwith %}
+</footer>
+
+    </style>
+
+  </head>
+  <body>
+    <div class="page-head">
+      <div class="left">
+      </div>
+    </div>
+
+    <h4> {{title}}</h4>
+    <div class='table-area table-responsive'>
+      <table class="table table-hover table-striped table-sm" id="customers">
+        <thead>
+          <tr>
+            <th scope="col">  UPI</th>
+            <th scope="col">Owner Name</th>
+            <th scope="col">Location</th>
+            <th scope="col">Amount (RWF)</th>
+            <th scope="col">Technician</th>
+            <th scope="col">Paid</th>
+                  <th scope="col">Bank</th>
+                  <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+      {% for report in reports %}
+          <tr class="text-sm-left small">
+            <td>{{report.upi}}</td>
+            <td>{{report.owner}}</td>
+            <td>{{report.location}}</td>
+            <td>{{report.amount}}</td>
+            <td>{{report.created_by}}</td>
+
+            {% if report.paid %}
+            <td>Yes</td>
+            {% endif %}
+            {% if not report.paid %}
+            <td>No</td>
+            {% endif %}
+            <td>{{report.client}}</td>
+            <td>{{report.created_at |date:"d M Y" }}</td>
+          </tr>
+
+          {% endfor %}
+      <tr>
+        <td colspan="3">Total</td>
+        <td colspan="2">{{total}}</td>
+      </tr>
+
+        </tbody>
+      </table>
+
+      </div>
+
+  </body>
+</html>
