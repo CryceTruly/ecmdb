@@ -3,7 +3,7 @@
   "buildpacks": [],
   "env": {},
   "formation": {},
-  "name": "SMACA LTDs",
+  "name": "eacmdbs",
   "scripts": {},
   "stack": "heroku-18"
 }
