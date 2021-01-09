@@ -111,7 +111,7 @@ def add_report(request):
         if not purpose:
             messages.error(request,  'Purpose is required')
             has_error = True
-        if contact and len(contact) is not 10:
+        if contact and len(contact) != 10:
             has_error = True
             messages.error(
                 request,  'The Contact phone should be  10 characters')

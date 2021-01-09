@@ -48,9 +48,16 @@
     <p class="card-text">{{this_month.amount}} RWF</p>
   </div>
 
-   {% if  this_month.count > 0 %}  <a href="{% url 'todays-expense-export' this_months_expenses this_month.amount %}" class="btn btn-secondary">VIEW PDF</a>
-   {% endif %}
-   {% if  this_month.count < 1 %}  <a href="{% url 'todays-expense-export' this_month_expenses this_month.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
+
+
+  {% if  this_month.count > 0 %}  <a href="{% url 'todays-expense-export' this_months_expenses this_month.amount %}" class="btn btn-secondary">VIEW PDF</a>{% endif %}
+  {% if  this_month.count < 1 %}  <a href="{% url 'todays-expense-export' this_months_expenses this_month.amount %}" class="btn btn-secondary  disabled">VIEW PDF</a>{% endif %}
+
+
+
+
+
+   
 </div>
 </div>
 <div class="col-md-3">
