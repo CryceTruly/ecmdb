@@ -213,6 +213,7 @@ def expense_summary(request):
         'this_year_expenses': 'this_year_expenses',
         'this_months_expenses': 'this_months_expenses'
     }
+
     return render(request, 'expenses/summary.html', context)
 
 

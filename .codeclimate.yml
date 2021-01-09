@@ -14,4 +14,4 @@ exclude_patterns:
   - "media/*"
   - "*/migrations/*"
   - "staticfiles/*"
-  - "eacmdb/static/*"
+  - "smacaltd/static/*"
