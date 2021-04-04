@@ -9,4 +9,4 @@ env:
   - SECRET_KEY='secretstuff'
 
 script:
-  - echo 'hello'
+  - echo 'hello to be implemented'

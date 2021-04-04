@@ -141,18 +141,12 @@ MESSAGE_TAGS = {
 }
 
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST ')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-
-
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_QUERYSTRING_AUTH = False
 
-AWS_S3_REGION_NAME = 'us-east-2'  # change to your region
+AWS_S3_REGION_NAME = 'us-east-2'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 
